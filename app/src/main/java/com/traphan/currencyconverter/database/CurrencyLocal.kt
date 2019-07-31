@@ -1,5 +1,6 @@
 package com.traphan.currencyconverter.database
 
+import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import io.reactivex.Completable
 import io.reactivex.Observable
 

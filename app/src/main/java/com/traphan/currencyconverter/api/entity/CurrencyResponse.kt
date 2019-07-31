@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.api.Entity
+package com.traphan.currencyconverter.api.entity
 
 data class CurrencyResponse(var ID : String,
                             var NumCode : String,

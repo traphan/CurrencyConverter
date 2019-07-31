@@ -1,6 +1,6 @@
 package com.traphan.currencyconverter;
 
-import com.traphan.currencyconverter.database.CurrencyEntity;
+import com.traphan.currencyconverter.database.entity.CurrencyEntity;
 
 import java.util.LinkedList;
 import java.util.List;

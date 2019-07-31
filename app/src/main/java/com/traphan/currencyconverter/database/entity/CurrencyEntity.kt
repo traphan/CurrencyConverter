@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.database
+package com.traphan.currencyconverter.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

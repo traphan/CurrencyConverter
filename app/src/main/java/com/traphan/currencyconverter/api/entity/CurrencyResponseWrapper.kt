@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.api.Entity
+package com.traphan.currencyconverter.api.entity
 
 data class CurrencyResponseWrapper(var AUD : CurrencyResponse, var AZN : CurrencyResponse,
                                    var GBP : CurrencyResponse, var AMD : CurrencyResponse,

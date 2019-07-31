@@ -1,8 +1,10 @@
-package com.traphan.currencyconverter.api
+package com.traphan.currencyconverter.di.module
 
 import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.traphan.currencyconverter.api.CurrencyApi
+import com.traphan.currencyconverter.api.RequestInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
