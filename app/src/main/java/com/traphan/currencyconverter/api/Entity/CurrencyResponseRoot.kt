@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.api.Enity
+package com.traphan.currencyconverter.api.Entity
 
 data class CurrencyResponseRoot(val Date : String,
                                 val PreviousDate : String,

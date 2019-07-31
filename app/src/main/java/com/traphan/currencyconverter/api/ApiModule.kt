@@ -18,6 +18,8 @@ import javax.inject.Singleton
 @Module
 class ApiModule {
 
+    private var url = "https://www.cbr-xml-daily.ru/"
+    private val cache = "http-cache"
 
     @Provides
     @Singleton
@@ -31,7 +33,7 @@ class ApiModule {
     @Singleton
     internal fun provideCache(application: Application): Cache {
         val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
-        val httpCacheDirectory = File(application.cacheDir, "http-cache")
+        val httpCacheDirectory = File(application.cacheDir, cache)
         return Cache(httpCacheDirectory, cacheSize)
     }
 
@@ -56,7 +58,7 @@ class ApiModule {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(url)
             .client(okHttpClient)
             .build()
     }
