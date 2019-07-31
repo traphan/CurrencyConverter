@@ -48,6 +48,11 @@ public class CurrencyDaoTest {
             currenciesObserver.awaitCount(1).awaitDone(3, TimeUnit.MILLISECONDS);
             currenciesObserver.assertNoErrors().assertComplete().assertValueCount(currencyEntities.size()).assertValue(currencyEntities);
             currenciesObserver.dispose();
+            currencyDao.deleteAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
+                TestObserver<List<CurrencyEntity>> currenciesObserverSecond = currencyDao.getAllCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).test();
+                currenciesObserverSecond.awaitCount(1).awaitDone(3, TimeUnit.MILLISECONDS);
+                currenciesObserverSecond.assertNoErrors().assertComplete().assertEmpty();
+            });
         });
     }
 }
