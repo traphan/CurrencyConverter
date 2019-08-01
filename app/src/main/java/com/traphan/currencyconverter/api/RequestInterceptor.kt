@@ -8,7 +8,6 @@ class RequestInterceptor : Interceptor{
         var original = chain.request()
         var request = original.newBuilder().build()
         var response = chain.proceed(request)
-        response.cacheResponse()
         return response
     }
 }
