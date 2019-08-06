@@ -1,12 +1,16 @@
 package com.traphan.currencyconverter
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.traphan.currencyconverter.base.BaseActivity
+import dagger.android.AndroidInjection
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_main)
+
     }
 }
