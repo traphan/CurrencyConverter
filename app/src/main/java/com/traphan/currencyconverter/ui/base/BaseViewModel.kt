@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.base
+package com.traphan.currencyconverter.ui.base
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable

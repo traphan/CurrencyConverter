@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.base
+package com.traphan.currencyconverter.ui.base
 
 import android.app.Activity
 import android.content.Context
