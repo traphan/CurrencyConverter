@@ -1,6 +1,7 @@
 package com.traphan.currencyconverter.ui
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.traphan.currencyconverter.R
@@ -24,7 +25,6 @@ class MainActivity : BaseActivity() {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_main)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-        currencyViewModel.getAllCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe{currencies -> currencies.forEach{text.append(it.toString())}}
+        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies -> currencies.forEach{text.append(it.toString())}})
     }
 }
