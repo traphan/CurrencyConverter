@@ -8,7 +8,7 @@ import com.traphan.currencyconverter.database.dao.CurrencyDao
 import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
-import com.traphan.currencyconverter.СurrencyСalculation.getCalculateAllCurrency
+import com.traphan.currencyconverter.сurrencyсalculation.getCalculateAllCurrency
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

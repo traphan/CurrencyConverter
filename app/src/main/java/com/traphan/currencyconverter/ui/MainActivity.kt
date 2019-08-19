@@ -1,22 +1,34 @@
 package com.traphan.currencyconverter.ui
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.base.BaseActivity
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
+import com.traphan.recycler.PagerSnapHelper
+import com.traphan.recycler.RecyclerItemClickListener
+import com.traphan.recycler.RecyclerSnapItemListener
+import com.traphan.recycler.RecyclerViewPaginator
 import dagger.android.AndroidInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener {
+
+
+    override fun onItemClick(parentView: View, childView: View, position: Int) {
+
+    }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var currenciesAdapter: CurrenciesAdapter
 
     lateinit var currencyViewModel: CurrencyViewModel
 
@@ -25,6 +37,30 @@ class MainActivity : BaseActivity() {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_main)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies -> currencies.forEach{text.append(it.toString())}})
+        currenciesAdapter = CurrenciesAdapter(this)
+        currency_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        currency_recycler_view.adapter = currenciesAdapter
+        currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, this))
+        val startSnapHelper = PagerSnapHelper(object : RecyclerSnapItemListener {
+                override fun onItemSnap(position: Int) {
+                    background.setBackgroundColor(Color.GREEN)
+                }
+            })
+        startSnapHelper.attachToRecyclerView(currency_recycler_view)
+        currency_recycler_view.addOnScrollListener(object : RecyclerViewPaginator(currency_recycler_view) {
+            override fun isLastPage(): Boolean {
+                return true
+            }
+
+
+            override fun loadMore(page: Long?) {
+
+            }
+
+            override fun loadFirstData(page: Long?) {
+
+            }
+        })
+        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies -> currenciesAdapter.setData(currencies)})
     }
 }

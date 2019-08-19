@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.СurrencyСalculation
+package com.traphan.currencyconverter.сurrencyсalculation
 
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
