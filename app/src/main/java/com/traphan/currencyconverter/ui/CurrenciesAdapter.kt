@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traphan.currencyconverter.R
 import kotlinx.android.synthetic.main.currency_card_item.view.*
 
+
 open class CurrenciesAdapter(activity: Activity): RecyclerView.Adapter<CurrenciesAdapter.CurrencyHolder>() {
 
     private val activity = activity
@@ -49,10 +50,10 @@ open class CurrenciesAdapter(activity: Activity): RecyclerView.Adapter<Currencie
         }
 
         internal fun bind(currencyViewEntity: CurrencyViewEntity) {
-            itemView.currency_name.text = currencyViewEntity.name
-            itemView.currency_count.setText(currencyViewEntity.currentNominal.toString())
-            itemView.currency_total.text = currencyViewEntity.total.toString()
-            itemView.rate.text = currencyViewEntity.rate.toString()
+            itemView.name_currency.text = currencyViewEntity.name
+            itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
+            itemView.outputValueCurrency.setText(currencyViewEntity.total.toString())
+            itemView.background_layout.setBackgroundResource(R.drawable.usa)
         }
     }
 }

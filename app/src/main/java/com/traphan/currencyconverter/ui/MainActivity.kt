@@ -43,7 +43,7 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
         currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, this))
         val startSnapHelper = PagerSnapHelper(object : RecyclerSnapItemListener {
                 override fun onItemSnap(position: Int) {
-                    background.setBackgroundColor(Color.GREEN)
+                    background.setBackgroundResource(R.drawable.usa)
                 }
             })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)
