@@ -17,7 +17,10 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener {
+class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener, CurrenciesAdapter.CurrencyCalculation {
+    override fun culculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
+        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal)
+    }
 
 
     override fun onItemClick(parentView: View, childView: View, position: Int) {
@@ -36,7 +39,7 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_main)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-        currenciesAdapter = CurrenciesAdapter(this)
+        currenciesAdapter = CurrenciesAdapter(this, this)
         currency_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         currency_recycler_view.adapter = currenciesAdapter
         currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, this))
@@ -61,5 +64,6 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
             }
         })
         currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies -> currenciesAdapter.setData(currencies)})
+
     }
 }
