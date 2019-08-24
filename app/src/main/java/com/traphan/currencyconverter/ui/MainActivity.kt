@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener, CurrenciesAdapter.CurrencyCalculation {
     override fun culculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
-        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal)
+        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal).observe(this, Observer { currenciesAdapter.setData(it) })
     }
 
 
@@ -49,21 +49,9 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
                 }
             })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)
-        currency_recycler_view.addOnScrollListener(object : RecyclerViewPaginator(currency_recycler_view) {
-            override fun isLastPage(): Boolean {
-                return true
-            }
-
-
-            override fun loadMore(page: Long?) {
-
-            }
-
-            override fun loadFirstData(page: Long?) {
-
-            }
+        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies ->
+            currenciesAdapter.setData(currencies.toMutableList())
         })
-        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies -> currenciesAdapter.setData(currencies)})
 
     }
 }

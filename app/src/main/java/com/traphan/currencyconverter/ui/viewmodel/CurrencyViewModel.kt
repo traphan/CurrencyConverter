@@ -18,6 +18,7 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
 
     private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi)
     private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
+    private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
 
     fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
         addDisposable(currencyRepository.getAllCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -25,7 +26,12 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
         return currencyViewEntitiesLiveData
     }
 
-    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
-        currencyViewEntitiesLiveData.value = currencyViewEntitiesLiveData.value?.plusElement(getCalculationCurrency(currencyViewEntity, nominal))
+    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float): LiveData<CurrencyViewEntity> {
+        addDisposable(getCalculationCurrency(currencyViewEntity, nominal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{currencyViewEntity ->
+            run {
+                currencyViewEntityLiveData.value = currencyViewEntity
+            }
+        })
+        return currencyViewEntityLiveData
     }
 }
