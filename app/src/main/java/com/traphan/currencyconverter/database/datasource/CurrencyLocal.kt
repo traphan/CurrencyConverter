@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.database
+package com.traphan.currencyconverter.database.datasource
 
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import io.reactivex.Completable

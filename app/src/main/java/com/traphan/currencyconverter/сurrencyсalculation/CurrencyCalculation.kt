@@ -6,7 +6,7 @@ import io.reactivex.Observable
 
 private fun getCalculateCurrency(currencyEntity: CurrencyEntity): CurrencyViewEntity {
     return CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.value / currencyEntity.nominal,
-        currencyEntity.nominal.toFloat(), currencyEntity.value)
+        currencyEntity.nominal.toFloat(), currencyEntity.value, currencyEntity.nominal.toString().length)
 }
 
 fun getCalculateAllCurrency(currencyEntities: List<CurrencyEntity>): Set<CurrencyViewEntity> {
@@ -15,5 +15,5 @@ fun getCalculateAllCurrency(currencyEntities: List<CurrencyEntity>): Set<Currenc
     return currencyViewEntities
 }
 fun getCalculationCurrency(currencyEntity: CurrencyViewEntity, nominal: Float): Observable<CurrencyViewEntity> {
-    return Observable.just(CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, nominal, currencyEntity.rate * nominal))
+    return Observable.just(CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, nominal, currencyEntity.rate * nominal, currencyEntity.cursorPosition))
 }

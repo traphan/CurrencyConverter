@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.traphan.currencyconverter.database.AppDatabase
 import com.traphan.currencyconverter.database.dao.CurrencyDao
+import com.traphan.currencyconverter.database.dao.ImageDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -20,7 +21,13 @@ class DbModule {
 
     @Provides
     @Singleton
-    internal fun provideMovieDao(appDatabase: AppDatabase): CurrencyDao {
+    internal fun provideCurrencyDao(appDatabase: AppDatabase): CurrencyDao {
         return appDatabase.currencyDao()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideImageDao(appDatabase: AppDatabase): ImageDao {
+        return appDatabase.imageDao()
     }
 }

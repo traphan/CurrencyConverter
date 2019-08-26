@@ -1,11 +1,13 @@
-package com.traphan.currencyconverter.database
+package com.traphan.currencyconverter.database.datasourceimpl
 
+import com.traphan.currencyconverter.database.datasource.CurrencyLocal
 import com.traphan.currencyconverter.database.dao.CurrencyDao
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import io.reactivex.Completable
 import io.reactivex.Observable
 
-class CurrencyLocalImpl(private val currencyDao: CurrencyDao) : CurrencyLocal {
+class CurrencyLocalImpl(private val currencyDao: CurrencyDao) :
+    CurrencyLocal {
 
     override fun insertOrUpdateAllCurrency(currencies : List<CurrencyEntity>): Completable {
         return currencyDao.insertOrUpdateAllCurrency(currencies)
