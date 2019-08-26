@@ -1,7 +1,6 @@
 package com.traphan.currencyconverter.ui
 
 import android.app.Activity
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
@@ -20,9 +19,11 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
     private var currencyViewEntities: MutableList<CurrencyViewEntity>? = null
     private val currencyCalculation: CurrencyCalculation = currencyCalculation
     private var currentPosition: Int = 0
+    private var selectorPosition: Int? = null
+
 
     interface CurrencyCalculation {
-        fun culculate(currencyViewEntity: CurrencyViewEntity, nominal: Float)
+        fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyHolder {
@@ -68,9 +69,11 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             itemView.inputValueCurrency.addTextChangedListener(object : TextWatcher {
 
                 override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
+
                 }
 
-                override fun beforeTextChanged(s: CharSequence, st: Int, c: Int, a: Int) {
+                override fun beforeTextChanged(s: CharSequence, start: Int, c: Int, a: Int) {
+                    selectorPosition = c
                 }
 
                 override fun afterTextChanged(s: Editable) {
@@ -78,7 +81,7 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
                         try {
                             if (!currencyViewEntity.currentNominal.equals(s.toString().toFloat())) {
                                 currentPosition = position!!
-                                currencyCalculation.culculate(currencyViewEntity, s.toString().toFloat())
+                                currencyCalculation.calculate(currencyViewEntity, s.toString().toFloat())
                             }
                         }
                         catch (e: ClassCastException) {
@@ -95,7 +98,12 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             itemView.name_currency.text = currencyViewEntity.name
             itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
             itemView.outputValueCurrency.setText(currencyViewEntity.total.toString())
-            itemView.background_layout.setBackgroundResource(R.drawable.usa)
+            itemView.background_layout.setBackgroundResource(R.drawable.czk)
+            if (selectorPosition == null) {
+                selectorPosition = currencyViewEntity.currentNominal.toString().length
+
+            }
+            itemView.inputValueCurrency.setSelection(selectorPosition!!)
         }
     }
 }

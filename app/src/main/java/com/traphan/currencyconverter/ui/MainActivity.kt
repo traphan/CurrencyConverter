@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener, CurrenciesAdapter.CurrencyCalculation {
-    override fun culculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
+    override fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
         currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal).observe(this, Observer { currenciesAdapter.setData(it) })
     }
 
@@ -45,7 +45,7 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
         currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, this))
         val startSnapHelper = PagerSnapHelper(object : RecyclerSnapItemListener {
                 override fun onItemSnap(position: Int) {
-                    background.setBackgroundResource(R.drawable.usa)
+                    background.setBackgroundResource(R.drawable.czk)
                 }
             })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)
