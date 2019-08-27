@@ -1,6 +1,6 @@
 package com.traphan.currencyconverter.ui
 
-data class CurrencyViewEntity(val name: String, val charCode: String, val rate: Float, var currentNominal: Float, var total: Float, var cursorPosition: Int) {
+data class CurrencyViewEntity(val name: String, val charCode: String, val rate: Float, var currentNominal: Float, var total: Float, var cursorPosition: Int, var patchImage: String?) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

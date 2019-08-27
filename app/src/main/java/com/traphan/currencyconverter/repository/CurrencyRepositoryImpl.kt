@@ -1,5 +1,6 @@
 package com.traphan.currencyconverter.repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.traphan.currencyconverter.api.CurrencyRemoteImpl
 import com.traphan.currencyconverter.api.CurrencyApi
@@ -11,16 +12,14 @@ import com.traphan.currencyconverter.database.dao.ImageDao
 import com.traphan.currencyconverter.database.datasource.ImageLocal
 import com.traphan.currencyconverter.database.datasourceimpl.ImageLocalImpl
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
+import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
+import com.traphan.currencyconverter.database.entity.ImageEntity
 import com.traphan.currencyconverter.repository.converter.CurrencyRemoteToLocalConverter
-import com.traphan.currencyconverter.repository.unzip.doZip
+import com.traphan.currencyconverter.repository.unzip.ZipUtils
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.io.FileInputStream
-import java.util.zip.ZipInputStream
-import java.util.zip.ZipOutputStream
 
 class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val currencyApi: CurrencyApi, private val imageDao: ImageDao): CurrencyRepository {
 
@@ -42,12 +41,17 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
             .ignoreElements()
     }
 
+    @SuppressLint("CheckResult")
     private fun fetchImage() {
-        val patch = "image"
-        val file = File(patch)
-        currencyRemote.fetchImages("https://drive.google.com/uc?id=1lp5m6xI8LUu89KSI3heWmZh3eTgLNc34").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            doZip(file, ZipOutputStream(it.byteStream()))
-            Log.d("1", it.byteStream().toString())
+        currencyRemote.fetchImages("https://drive.google.com/uc?id=16fHQOOKnv0kStSIy420MGNqF-hkIj6qr").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
+            ZipUtils().unpackZip(it.byteStream()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{patchs ->
+                run {
+                    var imagesEntity = listOf<ImageEntity>()
+                    imagesEntity = imagesEntity.plus(ImageEntity("USD", patchs["USD"]!!))
+                    imageDao.insertOrUpdateAllImage(imagesEntity).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{run{Log.d("1", "complete")}
+                    }
+                }
+            }
         }
     }
 
@@ -68,6 +72,27 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
                         .andThen(currencyLocal.getAllCurrency())
                 } else {
                     currencyLocal.getAllCurrency()
+                }
+            }
+    }
+
+    override fun loadAllCurrencyJoin(): Observable<List<CurrencyJoinImage>> {
+        fetchImage()
+        return currencyLocal.getCount()
+            .flatMap {counts ->
+                if (counts.isEmpty() || counts[0] == 0) {
+                    currencyRemote.fetchCurrency()
+                        .flatMap { currencyResponseRoot ->
+                            currencyLocal.insertOrUpdateAllCurrency(
+                                CurrencyRemoteToLocalConverter(
+                                    currencyResponseRoot
+                                ).convertAll()
+                            ).toObservable<Any>()
+                        }
+                        .ignoreElements()
+                        .andThen(currencyLocal.loadAllCurrencyJoinImage())
+                } else {
+                    currencyLocal.loadAllCurrencyJoinImage()
                 }
             }
     }

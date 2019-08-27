@@ -1,10 +1,8 @@
 package com.traphan.currencyconverter.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
+import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import io.reactivex.Completable
 import io.reactivex.Observable
 
@@ -22,4 +20,8 @@ interface CurrencyDao {
 
     @Query("SELECT COUNT(1) FROM currency")
     fun getCount() : Observable<List<Int>>
+
+    @Transaction
+    @Query("SELECT * FROM currency")
+    fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
 }

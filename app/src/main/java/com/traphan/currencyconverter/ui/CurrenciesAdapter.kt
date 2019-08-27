@@ -74,16 +74,18 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             val displayMetrics = DisplayMetrics()
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             val width = displayMetrics.widthPixels
-            itemView.layoutParams = RecyclerView.LayoutParams((width * 0.85f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
+            itemView.layoutParams =
+                RecyclerView.LayoutParams((width * 0.85f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
             itemView.inputValueCurrency.addTextChangedListener(object : TextWatcher {
 
                 override fun onTextChanged(s: CharSequence, start: Int, b: Int, c: Int) {
                     if (!isInflate) {
-                        currencyViewEntity.cursorPosition = if (currencyViewEntity.currentNominal.toString().length > s.length) {
-                            start
-                        } else {
-                            start + 1
-                        }
+                        currencyViewEntity.cursorPosition =
+                            if (currencyViewEntity.currentNominal.toString().length > s.length) {
+                                start
+                            } else {
+                                start + 1
+                            }
                     }
                 }
 
@@ -102,8 +104,7 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
                             currencyCalculation.calculate(currencyViewEntity, s.toString().toFloat())
                             isInflate = true
                         }
-                    }
-                    catch (e: ClassCastException) {
+                    } catch (e: ClassCastException) {
 
                     }
                 }
@@ -115,25 +116,27 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             this.position = position
             itemView.name_currency.text = currencyViewEntity.name
             itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
-            Picasso.get().load("drive.google.com/uc?id=1ODCJBL8TWdCm8K_tLz2V7TyGtvbNApDa").into(TargetImage(itemView))
+//            if (currencyViewEntity.patchImage != null) {
+//                Picasso.get().load(currencyViewEntity.patchImage).into(TargetImage(itemView))
+//            }
         }
-    }
-
-    inner class TargetImage(itemView: View): Target {
-        private val itemView = itemView
-
-        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-
-        }
-
-        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-
-        }
-
-        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-            var bitmapDrawable = BitmapDrawable(activity.resources, bitmap)
-            itemView.background = bitmapDrawable
-        }
-
     }
 }
+//    inner class TargetImage(itemView: View): Target {
+//        private val itemView = itemView
+//
+//        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+//
+//        }
+//
+//        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+//
+//        }
+//
+////        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+////            var bitmapDrawable = BitmapDrawable(activity.resources, bitmap)
+////            itemView.background = bitmapDrawable
+//        }
+//
+//    }
+//}
