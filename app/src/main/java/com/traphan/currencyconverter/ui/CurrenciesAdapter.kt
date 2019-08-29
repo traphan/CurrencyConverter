@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
@@ -17,6 +18,7 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.currency_card_item.view.*
 import java.lang.ClassCastException
 import com.traphan.currencyconverter.R
+import java.io.File
 import java.lang.Exception
 import java.net.URL
 import kotlin.annotation.Target as Target1
@@ -116,27 +118,11 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             this.position = position
             itemView.name_currency.text = currencyViewEntity.name
             itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
-//            if (currencyViewEntity.patchImage != null) {
-//                Picasso.get().load(currencyViewEntity.patchImage).into(TargetImage(itemView))
-//            }
+            itemView.outputValueCurrency.setText(currencyViewEntity.total.toString())
+            if (currencyViewEntity.patchImage != null) {
+                Picasso.get().load("file://" + currencyViewEntity.patchImage).into(itemView.image)
+            }
         }
     }
+
 }
-//    inner class TargetImage(itemView: View): Target {
-//        private val itemView = itemView
-//
-//        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-//
-//        }
-//
-//        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-//
-//        }
-//
-////        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-////            var bitmapDrawable = BitmapDrawable(activity.resources, bitmap)
-////            itemView.background = bitmapDrawable
-//        }
-//
-//    }
-//}

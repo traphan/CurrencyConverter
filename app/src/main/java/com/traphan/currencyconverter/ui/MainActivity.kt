@@ -12,7 +12,6 @@ import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import com.traphan.recycler.PagerSnapHelper
 import com.traphan.recycler.RecyclerItemClickListener
 import com.traphan.recycler.RecyclerSnapItemListener
-import com.traphan.recycler.RecyclerViewPaginator
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -21,8 +20,6 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
     override fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
         currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal).observe(this, Observer { currenciesAdapter.setData(it) })
     }
-
-
     override fun onItemClick(parentView: View, childView: View, position: Int) {
 
     }
