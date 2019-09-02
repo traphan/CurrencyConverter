@@ -5,22 +5,34 @@ import androidx.lifecycle.MutableLiveData
 import com.traphan.currencyconverter.api.CurrencyApi
 import com.traphan.currencyconverter.ui.base.BaseViewModel
 import com.traphan.currencyconverter.database.dao.CurrencyDao
+import com.traphan.currencyconverter.database.dao.ImageDao
 import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
-import com.traphan.currencyconverter.СurrencyСalculation.getCalculateAllCurrency
+import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
+import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao ): BaseViewModel() {
+class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao): BaseViewModel() {
 
-    private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi)
+    private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao)
+    private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
+    private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
 
-    fun getAllViewCurrency(): LiveData<List<CurrencyViewEntity>> {
-        var currencyViewEntitiesLiveData: MutableLiveData<List<CurrencyViewEntity>> = MutableLiveData()
-        addDisposable(currencyRepository.getAllCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
+        addDisposable(currencyRepository.loadAllCurrencyJoin().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe{currencies -> currencyViewEntitiesLiveData.value = getCalculateAllCurrency(currencies)})
         return currencyViewEntitiesLiveData
+    }
+
+    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float): LiveData<CurrencyViewEntity> {
+        addDisposable(getCalculationCurrency(currencyViewEntity, nominal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{currencyViewEntity ->
+            run {
+                currencyViewEntityLiveData.value = currencyViewEntity
+            }
+        })
+        return currencyViewEntityLiveData
     }
 }

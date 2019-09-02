@@ -1,6 +1,7 @@
-package com.traphan.currencyconverter.database
+package com.traphan.currencyconverter.database.datasource
 
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
+import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import io.reactivex.Completable
 import io.reactivex.Observable
 
@@ -13,4 +14,6 @@ interface CurrencyLocal {
     fun getAllCurrency() : Observable<List<CurrencyEntity>>
 
     fun getCount() : Observable<List<Int>>
+
+    fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
 }
