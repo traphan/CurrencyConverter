@@ -8,7 +8,7 @@ private fun getCalculateCurrency(currencyEntity: CurrencyEntity): CurrencyViewEn
 }
 
 fun getCalculateAllCurrency(currencyEntities: List<CurrencyEntity>): List<CurrencyViewEntity> {
-    var currencyViewEntities: List<CurrencyViewEntity> = mutableListOf()
-    currencyEntities.forEach{currencyViewEntities = currencyViewEntities.plus(getCalculateCurrency(it))}
-    return currencyViewEntities
+    var currencyViewEntitie: List<CurrencyViewEntity> = mutableListOf()
+    currencyEntities.forEach{currencyViewEntitie = currencyViewEntitie.plus(getCalculateCurrency(it))}
+    return currencyViewEntitie
 }
