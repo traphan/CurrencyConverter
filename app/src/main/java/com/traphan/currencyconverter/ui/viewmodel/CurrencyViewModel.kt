@@ -1,5 +1,6 @@
 package com.traphan.currencyconverter.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.traphan.currencyconverter.api.CurrencyApi
@@ -11,18 +12,21 @@ import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
+import com.traphan.currencyconverter.database.dao.UserCurrencyDao
+import com.traphan.currencyconverter.database.entity.UserCurrency
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao): BaseViewModel() {
+class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao, userCurrencyDao: UserCurrencyDao): BaseViewModel() {
 
-    private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao)
+    private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao, userCurrencyDao)
     private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
     private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
     private var baseCurrencyViewEntityLiveData: MutableLiveData<List<BaseCurrencyViewEntity>> = MutableLiveData()
+    private var userCurrencyLiveData: MutableLiveData<List<UserCurrency>> = MutableLiveData()
 
 
     fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
@@ -58,5 +62,22 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
             }
         })
         return baseCurrencyViewEntityLiveData
+    }
+
+    fun insertAllUserCurrency(userCurrencies: List<UserCurrency>) {
+        addDisposable(currencyRepository.insertAllUserCurrency(userCurrencies).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe())
+    }
+
+    fun loadAllUserCurrency(): LiveData<List<UserCurrency>> {
+        addDisposable(currencyRepository.loadAllUserCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{userCurrencies -> run{
+            userCurrencyLiveData.value = userCurrencies
+        }})
+        return userCurrencyLiveData
+    }
+
+    override fun onCleared() {
+        onStop()
+        super.onCleared()
     }
 }
