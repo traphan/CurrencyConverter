@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui.recyclerhelper
+package com.traphan.currencyconverter.ui.recyclerdragandrop.helpers
 
 interface ItemTouchHelperAdapter {
 

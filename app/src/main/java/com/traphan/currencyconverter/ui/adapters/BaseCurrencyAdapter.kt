@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,26 +7,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.traphan.currencyconverter.R
-import com.traphan.currencyconverter.ui.recyclerhelper.ItemTouchHelperAdapter
-import com.traphan.currencyconverter.ui.recyclerhelper.OnStartDragListener
+import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyHeader
+import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
+import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.RECYCLER_CARD_ITEM_TYPE
+import com.traphan.currencyconverter.ui.recyclerdragandrop.helpers.ItemTouchHelperAdapter
+import com.traphan.currencyconverter.ui.recyclerdragandrop.helpers.OnStartDragListener
 import kotlinx.android.synthetic.main.base_currency_choose_item.view.*
 import kotlinx.android.synthetic.main.header_base_currency.view.*
 import java.util.*
 
-class BaseCurrencyAdapter(dragListener:OnStartDragListener, context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchHelperAdapter {
+class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    ItemTouchHelperAdapter {
 
-    private val dragListener:OnStartDragListener = dragListener
+    private val dragListener: OnStartDragListener = dragListener
     private var currencyEntities: MutableList<BaseCurrencyViewEntity>? = null
-    private val firstHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.base_currency_txt), 0)
-    private val secondHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.nominal_currency_txt), 2)
-    private val thirdHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.non_currency_txt), 4)
+    private val firstHeaderItem: BaseCurrencyHeader =
+        BaseCurrencyHeader(
+            context.getString(R.string.base_currency_txt),
+            0
+        )
+    private val secondHeaderItem: BaseCurrencyHeader =
+        BaseCurrencyHeader(
+            context.getString(R.string.nominal_currency_txt),
+            2
+        )
+    private val thirdHeaderItem: BaseCurrencyHeader =
+        BaseCurrencyHeader(
+            context.getString(R.string.non_currency_txt),
+            4
+        )
 
-    private val context = context
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition > thirdHeaderItem.position && toPosition >= secondHeaderItem.position && toPosition > firstHeaderItem.position) {
-            thirdHeaderItem.position = thirdHeaderItem.position + 1
-            currencyEntities?.set(thirdHeaderItem.position - 1, thirdHeaderItem)
-            Collections.swap(currencyEntities, toPosition, thirdHeaderItem.position)
+        if (fromPosition == 1 && (toPosition == firstHeaderItem.position || secondHeaderItem.position == toPosition || thirdHeaderItem.position == toPosition)) {
+            return false
+        }
+        if (fromPosition == 3 && currencyEntities?.get(4) is BaseCurrencyHeader) {
+            return false
+        }
+        if (toPosition > secondHeaderItem.position && fromPosition != 1) {
+            val targetCurrency = currencyEntities?.get(fromPosition)
+            currencyEntities?.removeAt(fromPosition)
+            currencyEntities?.add(toPosition, targetCurrency!!)
             notifyItemMoved(fromPosition, toPosition)
         } else {
             Collections.swap(currencyEntities, fromPosition, toPosition)
@@ -39,8 +60,6 @@ class BaseCurrencyAdapter(dragListener:OnStartDragListener, context: Context): R
         currencyEntities?.minus(position)
         notifyItemRemoved(position)
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -86,7 +105,7 @@ class BaseCurrencyAdapter(dragListener:OnStartDragListener, context: Context): R
         return baseCurrencyViewEntity.type.ordinal
     }
 
-    inner class BaseCurrencyItem(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class BaseCurrencyItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         init {
 
@@ -94,7 +113,7 @@ class BaseCurrencyAdapter(dragListener:OnStartDragListener, context: Context): R
 
         internal fun bind(position: Int) {
             val currency = currencyEntities?.get(position)
-            if (currency is com.traphan.currencyconverter.ui.BaseCurrencyItem) {
+            if (currency is com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem) {
                 itemView.currency_icon.setImageResource(R.drawable.ic_russia)
                 itemView.currency_information.text = currency.name
                 itemView.base_currency_background.setOnTouchListener { _, event ->
@@ -107,15 +126,16 @@ class BaseCurrencyAdapter(dragListener:OnStartDragListener, context: Context): R
         }
     }
 
-    inner class HeaderItem(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class HeaderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
 
         }
 
         internal fun bind(position: Int) {
-            itemView.header_text.text = firstHeaderItem.name
+            val currency = currencyEntities?.get(position)
+            if (currency is BaseCurrencyHeader) {
+                itemView.header_text.text = currency.name
+            }
         }
     }
 }
-
-

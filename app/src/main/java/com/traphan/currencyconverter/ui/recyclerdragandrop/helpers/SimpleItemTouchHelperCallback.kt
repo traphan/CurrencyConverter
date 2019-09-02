@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui.recyclerhelper
+package com.traphan.currencyconverter.ui.recyclerdragandrop.helpers
 
 import android.graphics.Canvas
 import androidx.recyclerview.widget.GridLayoutManager
@@ -65,7 +65,8 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
-        viewHolder.itemView.alpha = ALPHA_FULL
+        viewHolder.itemView.alpha =
+            ALPHA_FULL
 
         if (viewHolder is ItemTouchHelperViewHolder) {
             // Tell the view holder it's time to restore the idle state

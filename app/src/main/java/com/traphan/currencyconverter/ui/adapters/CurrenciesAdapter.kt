@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.adapters
 
 import android.app.Activity
 import android.text.Editable
@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.currency_card_item.view.*
 import java.lang.ClassCastException
 import com.traphan.currencyconverter.R
+import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import kotlin.annotation.Target as Target1
 
 open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCalculation): RecyclerView.Adapter<CurrenciesAdapter.CurrencyHolder>() {

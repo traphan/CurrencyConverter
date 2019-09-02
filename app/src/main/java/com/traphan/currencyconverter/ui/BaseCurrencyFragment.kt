@@ -11,13 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.base.BaseFragment
-import com.traphan.currencyconverter.ui.recyclerhelper.OnStartDragListener
-import com.traphan.currencyconverter.ui.recyclerhelper.SimpleItemTouchHelperCallback
+import com.traphan.currencyconverter.ui.adapters.BaseCurrencyAdapter
+import com.traphan.currencyconverter.ui.recyclerdragandrop.helpers.OnStartDragListener
+import com.traphan.currencyconverter.ui.recyclerdragandrop.helpers.SimpleItemTouchHelperCallback
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_base_currency.*
 
-class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
+class BaseCurrencyFragment : BaseFragment(),
+    OnStartDragListener {
 
     lateinit var currencyViewModel: CurrencyViewModel
     private lateinit var baseCurrencyAdapter: BaseCurrencyAdapter
@@ -59,7 +61,9 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         base_currency_recycler_view.setHasFixedSize(true)
         base_currency_recycler_view.adapter = baseCurrencyAdapter
         base_currency_recycler_view.layoutManager = LinearLayoutManager(this.context)
-        val callback = SimpleItemTouchHelperCallback(baseCurrencyAdapter)
+        val callback = SimpleItemTouchHelperCallback(
+            baseCurrencyAdapter
+        )
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(base_currency_recycler_view)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)

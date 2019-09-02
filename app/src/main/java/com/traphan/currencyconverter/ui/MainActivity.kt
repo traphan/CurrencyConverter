@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.traphan.currencyconverter.R
+import com.traphan.currencyconverter.ui.adapters.CurrenciesAdapter
 import com.traphan.currencyconverter.ui.base.BaseActivity
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import com.traphan.recycler.PagerSnapHelper

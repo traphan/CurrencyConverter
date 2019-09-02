@@ -11,8 +11,8 @@ import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
-import com.traphan.currencyconverter.ui.BaseCurrencyItem
-import com.traphan.currencyconverter.ui.BaseCurrencyViewEntity
+import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem
+import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -46,8 +46,12 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
                 if (it != null && it.isNotEmpty()) {
                     var baseCurrencyViewEntity: List<BaseCurrencyViewEntity> = listOf()
                     it.forEach {
-                        baseCurrencyViewEntity = baseCurrencyViewEntity.plusElement(BaseCurrencyItem(it.currencyEntity.charCode + " "
-                                + it.currencyEntity.name, ""))
+                        baseCurrencyViewEntity = baseCurrencyViewEntity.plusElement(
+                            BaseCurrencyItem(
+                                it.currencyEntity.charCode + " "
+                                        + it.currencyEntity.name, ""
+                            )
+                        )
                     }
                     baseCurrencyViewEntityLiveData.value = baseCurrencyViewEntity
                 }
