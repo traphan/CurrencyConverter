@@ -16,4 +16,7 @@ interface CurrencyLocal {
     fun getCount() : Observable<List<Int>>
 
     fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
+
+    fun loadCurrencyJoinImage(currencyCharCodes: List<String>): Observable<List<CurrencyJoinImage>>
+
 }

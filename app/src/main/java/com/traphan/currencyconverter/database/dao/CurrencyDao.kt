@@ -24,4 +24,8 @@ interface CurrencyDao {
     @Transaction
     @Query("SELECT * FROM currency")
     fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
+
+    @Transaction
+    @Query("SELECT * FROM currency WHERE char_code IN (:currencyCharCodes)")
+    fun loadCurrencyJoinImage(currencyCharCodes: List<String>): Observable<List<CurrencyJoinImage>>
 }

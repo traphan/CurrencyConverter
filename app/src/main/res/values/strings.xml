@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Currency Converter</string>
+
+    <string name="base_currency_txt">Базовая валюта</string>
+    <string name="nominal_currency_txt">Остальные валюты</string>
+    <string name="non_currency_txt">Невошедшие</string>
 </resources>

@@ -11,6 +11,8 @@ import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
+import com.traphan.currencyconverter.ui.BaseCurrencyItem
+import com.traphan.currencyconverter.ui.BaseCurrencyViewEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -20,6 +22,8 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao)
     private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
     private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
+    private var baseCurrencyViewEntityLiveData: MutableLiveData<List<BaseCurrencyViewEntity>> = MutableLiveData()
+
 
     fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
         addDisposable(currencyRepository.loadAllCurrencyJoin().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -34,5 +38,21 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
             }
         })
         return currencyViewEntityLiveData
+    }
+
+    fun getBaseCurrency(): LiveData<List<BaseCurrencyViewEntity>> {
+        addDisposable(currencyRepository.loadAllCurrencyJoin().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
+            run {
+                if (it != null && it.isNotEmpty()) {
+                    var baseCurrencyViewEntity: List<BaseCurrencyViewEntity> = listOf()
+                    it.forEach {
+                        baseCurrencyViewEntity = baseCurrencyViewEntity.plusElement(BaseCurrencyItem(it.currencyEntity.charCode + " "
+                                + it.currencyEntity.name, ""))
+                    }
+                    baseCurrencyViewEntityLiveData.value = baseCurrencyViewEntity
+                }
+            }
+        })
+        return baseCurrencyViewEntityLiveData
     }
 }

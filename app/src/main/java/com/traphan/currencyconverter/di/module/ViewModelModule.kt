@@ -27,6 +27,8 @@ internal abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(CurrencyViewModel::class)
-    protected abstract fun movieListViewModel(currencyViewModel: CurrencyViewModel): ViewModel
+    protected abstract fun currencyViewModel(currencyViewModel: CurrencyViewModel): ViewModel
+
+
 
 }
