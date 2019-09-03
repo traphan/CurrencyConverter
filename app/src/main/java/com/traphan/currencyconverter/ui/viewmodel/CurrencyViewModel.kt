@@ -10,8 +10,11 @@ import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
+import com.traphan.currencyconverter.CurrencyCalculation.getCalculateCurrency
+import com.traphan.currencyconverter.CurrencyCalculation.getCalculationAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
 import com.traphan.currencyconverter.database.dao.UserCurrencyDao
+import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import com.traphan.currencyconverter.database.entity.UserCurrency
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
@@ -28,16 +31,29 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     private var userCurrencyLiveData: MutableLiveData<List<UserCurrency>> = MutableLiveData()
     private var userCurrencyCountLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private lateinit var userCurrencySaveLiveData: MutableLiveData<Boolean>
-
+    private lateinit var baseCurrency: CurrencyJoinImage
+    private lateinit var idBaseCurrency: String
 
     fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
         loadAllUserCurrency().observeForever{
             if(it != null && it.isNotEmpty()) {
                 var ids: List<String> = listOf()
-                it.forEach { ids = ids.plusElement(it.idCurrency) }
+                it.forEach {
+                    ids = ids.plusElement(it.idCurrency)
+                    if (it.isBase) {
+                        idBaseCurrency = it.idCurrency
+                    }
+                }
                 addDisposable(currencyRepository.loadAllCurrencyJoin(ids).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe{currencies -> currencyViewEntitiesLiveData.value = getCalculateAllCurrency(currencies)})
-        }}
+                    .subscribe{currencies ->
+                        currencies.forEach {
+                            if (it.currencyEntity.idRemote == idBaseCurrency) {
+                                baseCurrency = it
+                            }
+                        }
+                        currencyViewEntitiesLiveData.value = getCalculationAllCurrency(currencies.filter { it.currencyEntity.idRemote != idBaseCurrency }, baseCurrency)
+
+                    })}}
         return currencyViewEntitiesLiveData
     }
 
@@ -81,16 +97,12 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
         return userCurrencyCountLiveData
     }
 
-    fun loadAllUserCurrency(): LiveData<List<UserCurrency>> {
-        addDisposable(currencyRepository.loadAllUserCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{userCurrencies -> run{
-            userCurrencyLiveData.value = userCurrencies
-        }})
+    private fun loadAllUserCurrency(): LiveData<List<UserCurrency>> {
+        addDisposable(currencyRepository.loadAllUserCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{userCurrencies ->
+            run{
+                userCurrencyLiveData.value = userCurrencies
+            }})
         return userCurrencyLiveData
-    }
-
-    override fun onCleared() {
-        onStop()
-        super.onCleared()
     }
 
     private fun getAllUserCurrency(userCurrencies: List<BaseCurrencyViewEntity>): List<UserCurrency> {
@@ -101,5 +113,10 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
             }
         }
         return userCurrencyEntities
+    }
+
+    override fun onCleared() {
+        onStop()
+        super.onCleared()
     }
 }

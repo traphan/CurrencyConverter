@@ -19,6 +19,7 @@ class CurrencyRemoteToLocalConverter constructor(private val currencyResponseRoo
         val gson = GsonBuilder().create()
         val mapCurrency: Map<String, CurrencyResponse> = gson.fromJson(gson.toJson(currencyResponseRoot.Valute), type)
         mapCurrency.forEach{(key, value) -> currencyEntities = currencyEntities.plus(convert(value))}
+        currencyEntities = currencyEntities.plusElement(CurrencyEntity("BASE_CURRENCY_RUB", "643","RUB", 1, "Российский рубль",1f,1f))
         return currencyEntities
 }
 }
