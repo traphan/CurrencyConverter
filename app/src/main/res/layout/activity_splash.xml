@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/base_background"
+        android:background="@drawable/czk"
         tools:context=".ui.Splash">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

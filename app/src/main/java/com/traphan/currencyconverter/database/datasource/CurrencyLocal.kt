@@ -17,6 +17,6 @@ interface CurrencyLocal {
 
     fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
 
-    fun loadCurrencyJoinImage(currencyCharCodes: List<String>): Observable<List<CurrencyJoinImage>>
+    fun loadCurrencyJoinImage(currencyIds: List<String>): Observable<List<CurrencyJoinImage>>
 
 }

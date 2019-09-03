@@ -4,4 +4,8 @@
     <string name="base_currency_txt">Базовая валюта</string>
     <string name="nominal_currency_txt">Остальные валюты</string>
     <string name="non_currency_txt">Невошедшие</string>
+    <string name="use_currency_txt">использовать вабранные валюты</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

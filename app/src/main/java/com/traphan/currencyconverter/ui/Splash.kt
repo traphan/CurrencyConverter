@@ -3,11 +3,19 @@ package com.traphan.currencyconverter.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.base.BaseActivity
+import com.traphan.currencyconverter.ui.base.BaseFragment
+import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -15,9 +23,8 @@ import dagger.android.support.HasSupportFragmentInjector
 import java.util.ArrayList
 import javax.inject.Inject
 
-
-
 class Splash : BaseActivity(), HasSupportFragmentInjector {
+    private lateinit var viewModel: CurrencyViewModel
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -27,6 +34,7 @@ class Splash : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private val REQUEST_EXTERNAL_STORAGE = 666
+    private var permissionLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun verifyStoragePermissions(activity: AppCompatActivity) {
         val permissions = arrayOf(
@@ -48,7 +56,7 @@ class Splash : BaseActivity(), HasSupportFragmentInjector {
                 REQUEST_EXTERNAL_STORAGE
             )
         } else {
-            startNextAction()
+            permissionLiveData.value = true
         }
     }
 
@@ -56,7 +64,16 @@ class Splash : BaseActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_splash)
+        permissionLiveData.value = false
         verifyStoragePermissions(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
+        viewModel.getCountUserCurrency().observe(this, Observer {
+            if (it) {
+                startNextAction(CurrencyCalculationFragment.newInstance())
+            } else {
+                startNextAction(BaseCurrencyFragment.newInstance())
+            }
+        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -68,15 +85,17 @@ class Splash : BaseActivity(), HasSupportFragmentInjector {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     verifyStoragePermissions(this)
                 } else {
-                    startNextAction()
+                    permissionLiveData.value = true
                 }
             }
         }
     }
 
-    private fun startNextAction() {
-        val baseCurrencyFragment = BaseCurrencyFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.base_background, baseCurrencyFragment).addToBackStack(null).commit()
+    private fun startNextAction(fragment: BaseFragment) {
+        permissionLiveData.observe(this, Observer {
+            if(it) {
+                supportFragmentManager.beginTransaction().replace(R.id.base_background, fragment).addToBackStack(null).commit()
+            }
+        })
     }
-
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,8 +19,7 @@ import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_base_currency.*
 
-class BaseCurrencyFragment : BaseFragment(),
-    OnStartDragListener {
+class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
 
     lateinit var currencyViewModel: CurrencyViewModel
     private lateinit var baseCurrencyAdapter: BaseCurrencyAdapter
@@ -28,8 +28,6 @@ class BaseCurrencyFragment : BaseFragment(),
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,14 +59,17 @@ class BaseCurrencyFragment : BaseFragment(),
         base_currency_recycler_view.setHasFixedSize(true)
         base_currency_recycler_view.adapter = baseCurrencyAdapter
         base_currency_recycler_view.layoutManager = LinearLayoutManager(this.context)
-        val callback = SimpleItemTouchHelperCallback(
-            baseCurrencyAdapter
-        )
+        use_currency_btn.setOnClickListener { saveUserCurrency() }
+        val callback = SimpleItemTouchHelperCallback(baseCurrencyAdapter)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(base_currency_recycler_view)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
         currencyViewModel.getBaseCurrency().observe(this, Observer {
             baseCurrencyAdapter.setData(it.toMutableList())
         })
+    }
+
+    private fun saveUserCurrency() {
+        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this, Observer { Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show() })
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.traphan.currencyconverter.R
+import com.traphan.currencyconverter.database.entity.UserCurrency
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyHeader
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.RECYCLER_CARD_ITEM_TYPE
@@ -21,21 +22,9 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
 
     private val dragListener: OnStartDragListener = dragListener
     private var currencyEntities: MutableList<BaseCurrencyViewEntity>? = null
-    private val firstHeaderItem: BaseCurrencyHeader =
-        BaseCurrencyHeader(
-            context.getString(R.string.base_currency_txt),
-            0
-        )
-    private val secondHeaderItem: BaseCurrencyHeader =
-        BaseCurrencyHeader(
-            context.getString(R.string.nominal_currency_txt),
-            2
-        )
-    private val thirdHeaderItem: BaseCurrencyHeader =
-        BaseCurrencyHeader(
-            context.getString(R.string.non_currency_txt),
-            4
-        )
+    private val firstHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.base_currency_txt), 0)
+    private val secondHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.nominal_currency_txt), 2)
+    private val thirdHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.non_currency_txt), 4)
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         if (fromPosition == 1 && (toPosition == firstHeaderItem.position || secondHeaderItem.position == toPosition || thirdHeaderItem.position == toPosition)) {
@@ -105,12 +94,27 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
         return baseCurrencyViewEntity.type.ordinal
     }
 
-    inner class BaseCurrencyItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        init {
-
+    fun getAllUserCurrency(): List<BaseCurrencyViewEntity> {
+        var userCurrency: MutableList<BaseCurrencyViewEntity> = mutableListOf()
+        userCurrency.add(0, currencyEntities?.get(1)!!)
+        var startOtherCurrency = 0
+        var endOtherCurrency = 0
+        var counter = 0
+        currencyEntities?.forEach {
+            if (it is BaseCurrencyHeader) {
+                if(it.name == secondHeaderItem.name) {
+                    startOtherCurrency = counter
+                } else {
+                    endOtherCurrency = counter
+                }
+            }
+            counter++
         }
+        userCurrency.addAll(currencyEntities!!.subList(startOtherCurrency + 1, endOtherCurrency))
+        return userCurrency
+    }
 
+    inner class BaseCurrencyItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal fun bind(position: Int) {
             val currency = currencyEntities?.get(position)
             if (currency is com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem) {
@@ -127,10 +131,6 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
     }
 
     inner class HeaderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-
-        }
-
         internal fun bind(position: Int) {
             val currency = currencyEntities?.get(position)
             if (currency is BaseCurrencyHeader) {

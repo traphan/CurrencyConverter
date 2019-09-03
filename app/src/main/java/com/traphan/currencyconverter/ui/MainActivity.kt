@@ -14,7 +14,7 @@ import com.traphan.recycler.PagerSnapHelper
 import com.traphan.recycler.RecyclerItemClickListener
 import com.traphan.recycler.RecyclerSnapItemListener
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.currency_calculation_fragment.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewItemClickListener, CurrenciesAdapter.CurrencyCalculation {
@@ -27,9 +27,6 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
 
     }
 
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private lateinit var currenciesAdapter: CurrenciesAdapter
 
     lateinit var currencyViewModel: CurrencyViewModel
@@ -37,7 +34,7 @@ class MainActivity : BaseActivity(), RecyclerItemClickListener.OnRecyclerViewIte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.currency_calculation_fragment)
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
         currenciesAdapter = CurrenciesAdapter(this, this)
         currency_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

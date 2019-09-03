@@ -8,8 +8,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 
 class CurrencyLocalImpl(private val currencyDao: CurrencyDao) : CurrencyLocal {
-    override fun loadCurrencyJoinImage(currencyCharCodes: List<String>): Observable<List<CurrencyJoinImage>> {
-        return currencyDao.loadCurrencyJoinImage(currencyCharCodes)
+
+    override fun loadCurrencyJoinImage(currencyIds: List<String>): Observable<List<CurrencyJoinImage>> {
+        return currencyDao.loadCurrencyJoinImage(currencyIds)
     }
 
     override fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>> {

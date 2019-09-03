@@ -19,4 +19,6 @@ interface CurrencyRepository {
     fun loadAllUserCurrency(): Observable<List<UserCurrency>>
 
     fun getCountUserCurrency(): Observable<List<Int>>
+
+    fun loadAllCurrencyJoin(ids: List<String>): Observable<List<CurrencyJoinImage>>
 }
