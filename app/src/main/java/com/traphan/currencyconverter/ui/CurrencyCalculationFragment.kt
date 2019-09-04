@@ -68,5 +68,6 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
         currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies ->
             currenciesAdapter.setData(currencies.toMutableList())
         })
+        toolbarListener(this)
     }
 }

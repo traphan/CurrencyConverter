@@ -44,11 +44,6 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         fun newInstance() = BaseCurrencyFragment()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initialiseView()
@@ -67,6 +62,7 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         currencyViewModel.getBaseCurrency().observe(this, Observer {
             baseCurrencyAdapter.setData(it.toMutableList())
         })
+        toolbarListener(this)
     }
 
     private fun saveUserCurrency() {
