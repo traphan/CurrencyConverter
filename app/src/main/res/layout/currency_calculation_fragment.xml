@@ -7,6 +7,23 @@
         android:layout_height="match_parent"
         android:id="@+id/background">
 
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline_toolbar"
+            app:layout_constraintGuide_percent="0.07"
+            android:orientation="horizontal"/>
+
+    <include
+            android:id="@+id/include"
+            layout="@layout/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_toolbar"
+            app:layout_constraintStart_toStartOf="parent">
+    </include>
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
@@ -15,6 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"></androidx.recyclerview.widget.RecyclerView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
