@@ -23,7 +23,8 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
     private var currentPosition: Int = 0
 
     interface CurrencyCalculation {
-        fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float)
+        fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float)
+        fun switchCurrency(currencyViewEntity: CurrencyViewEntity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyHolder {
@@ -60,20 +61,53 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
 
         lateinit var currencyViewEntity: CurrencyViewEntity
         private var position: Int? = null
-        private var isInflate = true
-
 
         init {
             val displayMetrics = DisplayMetrics()
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             val width = displayMetrics.widthPixels
-            itemView.layoutParams =
-                RecyclerView.LayoutParams((width * 0.85f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
-            itemView.inputValueCurrency.addTextChangedListener(object : TextWatcher {
+            itemView.layoutParams = RecyclerView.LayoutParams((width * 0.85f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
+            itemView.outputValueCurrency.addTextChangedListener(object : TextWatcher {
+                private var isInflate = true
 
                 override fun onTextChanged(s: CharSequence, start: Int, b: Int, c: Int) {
                     if (!isInflate) {
-                        currencyViewEntity.cursorPosition =
+                        currencyViewEntity.cursorPositionTotal =
+                            if (currencyViewEntity.cursorPositionTotal.toString().length > s.length) {
+                                start
+                            } else {
+                                start + 1
+                            }
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int, c: Int, a: Int) {
+
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    synchronized(currencyViewEntity) {
+                        try {
+                            if (isInflate) {
+                                itemView.outputValueCurrency.setSelection(currencyViewEntity.cursorPositionTotal)
+                                isInflate = false
+                            }
+                            if (!currencyViewEntity.total.equals(s.toString().toFloat())) {
+                                currentPosition = position!!
+                                currencyCalculation.calculate(currencyViewEntity, itemView.inputValueCurrency.text.toString().toFloat(), s.toString().toFloat())
+                                isInflate = true
+                            }
+                        } catch (e: ClassCastException) {
+
+                        }
+                    }
+                }
+            })
+            itemView.inputValueCurrency.addTextChangedListener(object : TextWatcher {
+                private var isInflate = true
+                override fun onTextChanged(s: CharSequence, start: Int, b: Int, c: Int) {
+                    if (!isInflate) {
+                        currencyViewEntity.cursorPositionNominal =
                             if (currencyViewEntity.currentNominal.toString().length > s.length) {
                                 start
                             } else {
@@ -87,18 +121,20 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
                 }
 
                 override fun afterTextChanged(s: Editable) {
-                    try {
-                        if (isInflate) {
-                            itemView.inputValueCurrency.setSelection(currencyViewEntity.cursorPosition)
-                            isInflate = false
-                        }
-                        if (!currencyViewEntity.currentNominal.equals(s.toString().toFloat())) {
-                            currentPosition = position!!
-                            currencyCalculation.calculate(currencyViewEntity, s.toString().toFloat())
-                            isInflate = true
-                        }
-                    } catch (e: ClassCastException) {
+                    synchronized(currencyViewEntity) {
+                        try {
+                            if (isInflate) {
+                                itemView.inputValueCurrency.setSelection(currencyViewEntity.cursorPositionNominal)
+                                isInflate = false
+                            }
+                            if (!currencyViewEntity.currentNominal.equals(s.toString().toFloat())) {
+                                currentPosition = position!!
+                                currencyCalculation.calculate(currencyViewEntity, s.toString().toFloat(), itemView.outputValueCurrency.text.toString().toFloat())
+                                isInflate = true
+                            }
+                        } catch (e: ClassCastException) {
 
+                        }
                     }
                 }
             })
@@ -108,11 +144,18 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             this.currencyViewEntity = currencyViewEntities!![position]
             this.position = position
             itemView.name_currency.text = currencyViewEntity.name
-            itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
-            itemView.outputValueCurrency.setText(currencyViewEntity.total.toString())
+            synchronized(currencyViewEntity) {
+                itemView.inputValueCurrency.setText(currencyViewEntity.currentNominal.toString())
+                itemView.outputValueCurrency.setText(currencyViewEntity.total.toString())
+            }
+            itemView.switch_btn.setOnClickListener { switchCurrency(currencyViewEntity) }
             if (currencyViewEntity.patchImage != null) {
                 Picasso.get().load("file://" + currencyViewEntity.patchImage).into(itemView.image)
             }
+        }
+
+        private fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
+            currencyCalculation.switchCurrency(currencyViewEntity)
         }
     }
 

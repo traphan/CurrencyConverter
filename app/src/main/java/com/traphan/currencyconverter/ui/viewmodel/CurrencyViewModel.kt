@@ -9,8 +9,6 @@ import com.traphan.currencyconverter.database.dao.ImageDao
 import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
-import com.traphan.currencyconverter.CurrencyCalculation.getCalculateAllCurrency
-import com.traphan.currencyconverter.CurrencyCalculation.getCalculateCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
 import com.traphan.currencyconverter.database.dao.UserCurrencyDao
@@ -57,12 +55,8 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
         return currencyViewEntitiesLiveData
     }
 
-    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float): LiveData<CurrencyViewEntity> {
-        addDisposable(getCalculationCurrency(currencyViewEntity, nominal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{currencyViewEntity ->
-            run {
-                currencyViewEntityLiveData.value = currencyViewEntity
-            }
-        })
+    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float): LiveData<CurrencyViewEntity> {
+        currencyViewEntityLiveData.value = getCalculationCurrency(currencyViewEntity, nominal, total)
         return currencyViewEntityLiveData
     }
 
@@ -118,5 +112,9 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     override fun onCleared() {
         onStop()
         super.onCleared()
+    }
+
+    fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
+
     }
 }

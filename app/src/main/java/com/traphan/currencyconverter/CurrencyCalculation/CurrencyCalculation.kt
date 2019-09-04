@@ -2,27 +2,31 @@ package com.traphan.currencyconverter.CurrencyCalculation
 
 import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
-import io.reactivex.Observable
 
-fun getCalculateCurrency(currencyEntity: CurrencyJoinImage): CurrencyViewEntity {
+private fun getCalculateCurrency(currencyEntity: CurrencyJoinImage): CurrencyViewEntity {
     var image = if (currencyEntity.imageEntity != null && currencyEntity.imageEntity.isNotEmpty()) {
         currencyEntity.imageEntity[0].images
     } else {
         null
     }
-    return CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal,
-        currencyEntity.currencyEntity.nominal.toFloat(), currencyEntity.currencyEntity.value, currencyEntity.currencyEntity.nominal.toString().length,
-        image)
+    val rate = currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal
+    return CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f, rate, 1, 1, image)
 }
 
-fun getCalculateAllCurrency(currencyEntities: List<CurrencyJoinImage>): Set<CurrencyViewEntity> {
+private fun getCalculateAllCurrency(currencyEntities: List<CurrencyJoinImage>): Set<CurrencyViewEntity> {
     var currencyViewEntities: Set<CurrencyViewEntity> = setOf()
     currencyEntities.forEach{currencyViewEntities = currencyViewEntities.plus(getCalculateCurrency(it))}
     return currencyViewEntities
 }
-fun getCalculationCurrency(currencyEntity: CurrencyViewEntity, nominal: Float): Observable<CurrencyViewEntity> {
-    return Observable.just(CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, nominal, currencyEntity.rate * nominal, currencyEntity.cursorPosition,
-        currencyEntity.patchImage))
+
+fun getCalculationCurrency(currencyEntity: CurrencyViewEntity, nominal: Float, total:Float): CurrencyViewEntity {
+    return if (total.equals(currencyEntity.total)) {
+        CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, nominal, currencyEntity.rate * nominal, currencyEntity.cursorPositionNominal,
+            currencyEntity.cursorPositionTotal, currencyEntity.patchImage)
+    } else {
+        CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, total / currencyEntity.rate,
+            total, currencyEntity.cursorPositionNominal, currencyEntity.cursorPositionTotal, currencyEntity.patchImage)
+    }
 }
 
 private fun getCalculationCurrencyWithBase(currencyEntity: CurrencyJoinImage, baseCurrency: CurrencyJoinImage): CurrencyViewEntity {
@@ -32,12 +36,11 @@ private fun getCalculationCurrencyWithBase(currencyEntity: CurrencyJoinImage, ba
         null
     }
     return if (currencyEntity.currencyEntity.idRemote == "BASE_CURRENCY_RUB") {
-        CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal,
-            currencyEntity.currencyEntity.nominal.toFloat(), currencyEntity.currencyEntity.value, currencyEntity.currencyEntity.nominal.toString().length, image)
+        val rate =  (baseCurrency.currencyEntity.value / baseCurrency.currencyEntity.nominal) / (currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal)
+        CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f, rate , 1,1, image)
     } else {
         val rate =  (baseCurrency.currencyEntity.value / baseCurrency.currencyEntity.nominal) / (currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal)
-        CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, currencyEntity.currencyEntity.nominal.toFloat(),
-            currencyEntity.currencyEntity.nominal * rate, currencyEntity.currencyEntity.nominal.toString().length, image)
+        CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f, rate, 1, 1, image)
     }
 }
 

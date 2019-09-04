@@ -18,6 +18,10 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.currency_calculation_fragment.*
 
 class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.OnRecyclerViewItemClickListener, CurrenciesAdapter.CurrencyCalculation {
+    override fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
+        currencyViewModel.switchCurrency(currencyViewEntity)
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = CurrencyCalculationFragment()
@@ -31,8 +35,8 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
 
     }
 
-    override fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float) {
-        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal).observe(this, Observer { currenciesAdapter.setData(it) })
+    override fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float) {
+        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal, total).observe(this, Observer { currenciesAdapter.setData(it) })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

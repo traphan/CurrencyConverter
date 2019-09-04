@@ -20,7 +20,7 @@
             style="@style/BaseTextStyle"
             android:background="@null"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/swipe_btn"
+            app:layout_constraintBottom_toTopOf="@+id/switch_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:inputType="numberDecimal"
@@ -30,7 +30,7 @@
     <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/swipe_btn"
+            android:id="@+id/switch_btn"
             android:src="@drawable/swap_arrows"
             app:layout_constraintTop_toBottomOf="@+id/inputValueCurrency"
             app:layout_constraintBottom_toTopOf="@+id/outputValueCurrency"
@@ -45,12 +45,10 @@
             android:background="@null"
             style="@style/BaseTextStyle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swipe_btn"
+            app:layout_constraintTop_toBottomOf="@+id/switch_btn"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:focusedByDefault="false"
-            android:layout_marginStart="8dp"
             android:inputType="numberDecimal"
     />
     <TextView
