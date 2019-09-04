@@ -19,9 +19,12 @@
     <androidx.appcompat.widget.AppCompatButton
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="@dimen/base_margin"
+            android:layout_marginTop="@dimen/base_margin"
+            android:layout_marginBottom="@dimen/base_margin"
             android:text="@string/use_currency_txt"
             android:id="@+id/use_currency_btn"
+            android:textColor="@color/white"
+            android:background="@drawable/button_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_right"
             app:layout_constraintStart_toStartOf="@+id/guideline_left"
