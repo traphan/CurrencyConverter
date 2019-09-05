@@ -1,12 +1,13 @@
 package com.traphan.currencyconverter.repository.unzip
 
+import android.content.Context
 import android.os.Environment
 import io.reactivex.Single
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-fun unpackZip(inputStream: InputStream): Single<Map<String, String>> {
+fun unpackZip(inputStream: InputStream, context: Context): Single<Map<String, String>> {
     val `is`: InputStream
     val zis: ZipInputStream
     val patches = mutableMapOf<String, String>()
@@ -19,12 +20,8 @@ fun unpackZip(inputStream: InputStream): Single<Map<String, String>> {
         ze = zis.nextEntry
         while (ze != null) {
             filename = ze.name
-            if (ze.isDirectory) {
-                val fmd = File(Environment.getExternalStoragePublicDirectory(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + filename).toString() + filename)
-                fmd.mkdirs()
-                continue
-            }
-            val fout = FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + filename)
+            val path = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val fout = FileOutputStream(path.toString() + filename)
             var count: Int = zis.read(buffer)
             while (count != -1) {
                 fout.write(buffer, 0, count)
@@ -32,7 +29,7 @@ fun unpackZip(inputStream: InputStream): Single<Map<String, String>> {
             }
             fout.close()
             zis.closeEntry()
-            patches[filename.substring(0, filename.length - 4)] = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + filename
+            patches[filename.substring(0, filename.length - 4)] = path.toString() + filename
             ze = zis.nextEntry
         }
         zis.close()

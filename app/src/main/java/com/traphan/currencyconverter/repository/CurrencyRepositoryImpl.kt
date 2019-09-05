@@ -1,6 +1,8 @@
 package com.traphan.currencyconverter.repository
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.traphan.currencyconverter.api.CurrencyRemoteImpl
 import com.traphan.currencyconverter.api.CurrencyApi
@@ -25,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val currencyApi: CurrencyApi,
-                                         private val imageDao: ImageDao, private val userCurrencyDao: UserCurrencyDao): CurrencyRepository {
+                                         private val imageDao: ImageDao, private val userCurrencyDao: UserCurrencyDao, private val context: Context): CurrencyRepository {
 
     private val currencyRemote: CurrencyRemote = CurrencyRemoteImpl(currencyApi)
     private val currencyLocal: CurrencyLocal = CurrencyLocalImpl(currencyDao)
@@ -48,7 +50,7 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
     @SuppressLint("CheckResult")
     private fun fetchImage() {
         currencyRemote.fetchImages("https://drive.google.com/uc?id=16fHQOOKnv0kStSIy420MGNqF-hkIj6qr").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            unpackZip(it.byteStream()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{patchs ->
+            unpackZip(it.byteStream(), context).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{patchs ->
                 run {
                     var imagesEntity = listOf<ImageEntity>()
                     imagesEntity = imagesEntity.plus(ImageEntity("USD", patchs["USD"]!!))
