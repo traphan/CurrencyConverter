@@ -2,7 +2,8 @@
 <resources>
     <dimen name="base_margin">5dp</dimen>
     <dimen name="margin_toolbar_btn">20dp</dimen>
-    <dimen name="base_text_size">14sp</dimen>
+    <dimen name="header_text_size">20sp</dimen>
     <dimen name="toolbar_image_menu_size">24dp</dimen>
     <dimen name="toolbar_image_size">30dp</dimen>
+    <dimen name="currency_value_base_text_size">34sp</dimen>
 </resources>
