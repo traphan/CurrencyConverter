@@ -1,5 +1,6 @@
 package com.traphan.currencyconverter.repository
 
+import android.content.Context
 import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import com.traphan.currencyconverter.database.entity.UserCurrency
@@ -21,4 +22,6 @@ interface CurrencyRepository {
     fun getCountUserCurrency(): Observable<List<Int>>
 
     fun loadAllCurrencyJoin(ids: List<String>): Observable<List<CurrencyJoinImage>>
+
+    fun isInternetAvailable(): Boolean
 }

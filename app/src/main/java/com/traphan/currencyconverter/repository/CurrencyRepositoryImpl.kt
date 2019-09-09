@@ -2,7 +2,11 @@ package com.traphan.currencyconverter.repository
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
+import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.util.Log
 import com.traphan.currencyconverter.api.CurrencyRemoteImpl
 import com.traphan.currencyconverter.api.CurrencyApi
@@ -25,6 +29,16 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import android.net.NetworkInfo
+import androidx.core.content.ContextCompat.getSystemService
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.Network
+import android.os.Build
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.ContextCompat.getSystemService
+import com.traphan.currencyconverter.ApiJobScheduler
+
 
 class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val currencyApi: CurrencyApi,
                                          private val imageDao: ImageDao, private val userCurrencyDao: UserCurrencyDao, private val context: Context): CurrencyRepository {
@@ -33,6 +47,13 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
     private val currencyLocal: CurrencyLocal = CurrencyLocalImpl(currencyDao)
     private val imageLocal: ImageLocal = ImageLocalImpl(imageDao)
     private val userCurrencyLocal = UserCurrencyLocalImpl(userCurrencyDao)
+    private val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+    private val componentName:ComponentName = ComponentName(context, ApiJobScheduler::class.java)
+    private val jobInfo:JobInfo = JobInfo.Builder(1, componentName).setOverrideDeadline(0).build()
+
+    init {
+        jobScheduler.schedule(jobInfo)
+    }
 
     override fun fetchCurrency(): Completable {
         fetchImage()
@@ -83,24 +104,7 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
     }
 
     override fun loadAllCurrencyJoin(): Observable<List<CurrencyJoinImage>> {
-        fetchImage()
-        return currencyLocal.getCount()
-            .flatMap {counts ->
-                if (counts.isEmpty() || counts[0] == 0) {
-                    currencyRemote.fetchCurrency()
-                        .flatMap { currencyResponseRoot ->
-                            currencyLocal.insertOrUpdateAllCurrency(
-                                CurrencyRemoteToLocalConverter(
-                                    currencyResponseRoot
-                                ).convertAll()
-                            ).toObservable<Any>()
-                        }
-                        .ignoreElements()
-                        .andThen(currencyLocal.loadAllCurrencyJoinImage())
-                } else {
-                    currencyLocal.loadAllCurrencyJoinImage()
-                }
-            }
+        return currencyLocal.loadAllCurrencyJoinImage()
     }
 
     override fun insertAllUserCurrency(userCurrencies: List<UserCurrency>): Completable {
@@ -117,5 +121,33 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
 
     override fun loadAllCurrencyJoin(ids: List<String>): Observable<List<CurrencyJoinImage>> {
         return currencyLocal.loadCurrencyJoinImage(ids)
+    }
+    @Suppress("DEPRECATION")
+    override fun isInternetAvailable(): Boolean {
+        var result = false
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm?.run {
+                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+                    result = when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                        else -> false
+                    }
+                }
+            }
+        } else {
+            cm?.run {
+                cm.activeNetworkInfo?.run {
+                    if (type == ConnectivityManager.TYPE_WIFI) {
+                        result = true
+                    } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                        result = true
+                    }
+                }
+            }
+        }
+        return result
     }
 }

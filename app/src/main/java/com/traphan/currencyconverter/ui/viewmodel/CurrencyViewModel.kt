@@ -119,4 +119,8 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
 
     }
+
+    fun isInternetAvailable(): Boolean {
+        return currencyRepository.isInternetAvailable()
+    }
 }
