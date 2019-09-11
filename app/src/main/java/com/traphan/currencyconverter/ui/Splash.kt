@@ -24,7 +24,23 @@ import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.dialog.NetworkDialog
 
 
-class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector {
+class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector, Observer<Boolean> {
+
+
+    override fun onChanged(t: Boolean?) {
+        if (t!!) {
+            startNextAction(CurrencyCalculationFragment.newInstance())
+            viewModel.isInsertUserCurrency().removeObserver(this)
+        } else {
+            if (!viewModel.isInternetAvailable()) {
+                NetworkDialog().show(this)
+            } else {
+                startNextAction(BaseCurrencyFragment.newInstance())
+                viewModel.isInsertUserCurrency().removeObserver(this)
+            }
+        }
+    }
+
     private lateinit var viewModel: CurrencyViewModel
 
     @Inject
@@ -82,17 +98,7 @@ class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector {
         permissionLiveData.observe(this, Observer {
             if (it) {
                 viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-                viewModel.isInsertUserCurrency().observe(this, Observer {
-                    if (it) {
-                        startNextAction(CurrencyCalculationFragment.newInstance())
-                    } else {
-                        if (!viewModel.isInternetAvailable()) {
-                            NetworkDialog().show(this)
-                        } else {
-                            startNextAction(BaseCurrencyFragment.newInstance())
-                        }
-                    }
-                })
+                viewModel.isInsertUserCurrency().observe(this, this)
             }
         })
     }

@@ -71,6 +71,6 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
 
     private fun saveUserCurrency() {
         currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this,
-            Observer { Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show() })
+            Observer { calculate_btn.performClick() })
     }
 }
