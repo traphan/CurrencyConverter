@@ -107,13 +107,16 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
         return currencyLocal.loadAllCurrencyJoinImage()
     }
 
+
     override fun insertAllUserCurrency(userCurrencies: List<UserCurrency>): Completable {
         return userCurrencyLocal.deleteAll().subscribeOn(Schedulers.io()).andThen(userCurrencyLocal.insertAllUserCurrency(userCurrencies))
     }
 
+
     override fun loadAllUserCurrency(): Observable<List<UserCurrency>> {
         return userCurrencyLocal.loadAllUserCurrency()
     }
+
 
     override fun getCountUserCurrency(): Observable<List<Int>> {
         return userCurrencyLocal.getCount()

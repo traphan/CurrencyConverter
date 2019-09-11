@@ -82,7 +82,7 @@ class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector {
         permissionLiveData.observe(this, Observer {
             if (it) {
                 viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-                viewModel.getCountUserCurrency().observe(this, Observer {
+                viewModel.isInsertUserCurrency().observe(this, Observer {
                     if (it) {
                         startNextAction(CurrencyCalculationFragment.newInstance())
                     } else {

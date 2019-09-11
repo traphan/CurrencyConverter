@@ -20,11 +20,14 @@ import java.util.*
 class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ItemTouchHelperAdapter {
 
+    private val context = context
+    private var indexOtherCurrency = 4
     private val dragListener: OnStartDragListener = dragListener
     private var currencyEntities: MutableList<BaseCurrencyViewEntity>? = null
     private val firstHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.base_currency_txt), 0)
     private val secondHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.nominal_currency_txt), 2)
-    private val thirdHeaderItem: BaseCurrencyHeader = BaseCurrencyHeader(context.getString(R.string.non_currency_txt), 4)
+    private lateinit var thirdHeaderItem: BaseCurrencyHeader
+
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         if (fromPosition == 1 && (toPosition == firstHeaderItem.position || secondHeaderItem.position == toPosition || thirdHeaderItem.position == toPosition)) {
@@ -70,10 +73,16 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
     }
 
     fun setData(currencyEntities: MutableList<BaseCurrencyViewEntity>) {
-        currencyEntities.add(firstHeaderItem.position, firstHeaderItem)
-        currencyEntities.add(secondHeaderItem.position, secondHeaderItem)
-        currencyEntities.add(thirdHeaderItem.position, thirdHeaderItem)
         this.currencyEntities = currencyEntities
+//        notifyDataSetChanged()
+    }
+
+    fun setIndex(index: Int) {
+        this.indexOtherCurrency = index
+        thirdHeaderItem = BaseCurrencyHeader(context.getString(R.string.non_currency_txt), indexOtherCurrency)
+        currencyEntities!!.add(firstHeaderItem.position, firstHeaderItem)
+        currencyEntities!!.add(secondHeaderItem.position, secondHeaderItem)
+        currencyEntities!!.add(thirdHeaderItem.position, thirdHeaderItem)
         notifyDataSetChanged()
     }
 
@@ -120,7 +129,7 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
             if (currency is com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem) {
                 itemView.currency_icon.setImageResource(R.drawable.ic_russia)
                 itemView.currency_information.text = currency.name
-                itemView.base_currency_background.setOnTouchListener { _, event ->
+                itemView.reorder_item.setOnTouchListener { _, event ->
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         dragListener.onStartDrag(this)
                     }

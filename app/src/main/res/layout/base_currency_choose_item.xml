@@ -25,24 +25,44 @@
             android:layout_marginBottom="@dimen/base_margin"
             android:layout_marginTop="@dimen/base_margin"
             android:id="@+id/currency_information"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right_margin"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_left_reorder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currency_icon"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/reorder_item"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/reorder_icon"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_right_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left_reorder"/>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/guideline_left_margin"
-            app:layout_constraintGuide_percent="0.1"
+            app:layout_constraintGuide_percent="0.05"
             android:orientation="vertical"/>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/guideline_right_margin"
+            app:layout_constraintGuide_percent="0.95"
+            android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline_left_reorder"
             app:layout_constraintGuide_percent="0.9"
             android:orientation="vertical"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

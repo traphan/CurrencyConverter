@@ -18,6 +18,7 @@ import com.traphan.currencyconverter.ui.recyclerdragandrop.helpers.SimpleItemTou
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_base_currency.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
 
@@ -61,11 +62,15 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
         currencyViewModel.getBaseCurrency().observe(this, Observer {
             baseCurrencyAdapter.setData(it.toMutableList())
+            currencyViewModel.getUserCurrencyOtherCurrencyIndex().observe(this, Observer {
+                baseCurrencyAdapter.setIndex(it)
+            })
         })
         toolbarListener(this)
     }
 
     private fun saveUserCurrency() {
-        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this, Observer { Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show() })
+        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this,
+            Observer { Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show() })
     }
 }
