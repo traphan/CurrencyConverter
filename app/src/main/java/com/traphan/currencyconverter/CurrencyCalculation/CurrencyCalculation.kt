@@ -12,7 +12,7 @@ private fun getCalculateCurrency(currencyEntity: CurrencyJoinImage): CurrencyVie
     }
     val rate = currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal
     return CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f,
-        rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1, 1, image)
+        rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1, 1, image, currencyEntity.currencyEntity.idRemote)
 }
 
 private fun getCalculateAllCurrency(currencyEntities: List<CurrencyJoinImage>): Set<CurrencyViewEntity> {
@@ -25,10 +25,11 @@ fun getCalculationCurrency(currencyEntity: CurrencyViewEntity, nominal: Float, t
     return if (total.equals(currencyEntity.total)) {
         CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate,
             nominal.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), (currencyEntity.rate * nominal).toBigDecimal().setScale(4, RoundingMode.UP).toFloat()
-            , currencyEntity.cursorPositionNominal, currencyEntity.cursorPositionTotal, currencyEntity.patchImage)
+            , currencyEntity.cursorPositionNominal, currencyEntity.cursorPositionTotal, currencyEntity.patchImage, currencyEntity.idRemote)
     } else {
         CurrencyViewEntity(currencyEntity.name, currencyEntity.charCode, currencyEntity.rate, (total / currencyEntity.rate).toBigDecimal().setScale(4, RoundingMode.UP).toFloat(),
-            total.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), currencyEntity.cursorPositionNominal, currencyEntity.cursorPositionTotal, currencyEntity.patchImage)
+            total.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), currencyEntity.cursorPositionNominal, currencyEntity.cursorPositionTotal,
+            currencyEntity.patchImage, currencyEntity.idRemote)
     }
 }
 
@@ -41,11 +42,11 @@ private fun getCalculationCurrencyWithBase(currencyEntity: CurrencyJoinImage, ba
     return if (currencyEntity.currencyEntity.idRemote == "BASE_CURRENCY_RUB") {
         val rate =  (baseCurrency.currencyEntity.value / baseCurrency.currencyEntity.nominal) / (currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal)
         CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f,
-            rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1,1, image)
+            rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1,1, image, currencyEntity.currencyEntity.idRemote)
     } else {
         val rate =  (baseCurrency.currencyEntity.value / baseCurrency.currencyEntity.nominal) / (currencyEntity.currencyEntity.value / currencyEntity.currencyEntity.nominal)
         CurrencyViewEntity(currencyEntity.currencyEntity.name, currencyEntity.currencyEntity.charCode, rate, 1f,
-            rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1, 1, image)
+            rate.toBigDecimal().setScale(4, RoundingMode.UP).toFloat(), 1, 1, image, currencyEntity.currencyEntity.idRemote)
     }
 }
 

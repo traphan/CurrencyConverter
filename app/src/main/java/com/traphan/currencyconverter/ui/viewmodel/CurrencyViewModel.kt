@@ -2,6 +2,7 @@ package com.traphan.currencyconverter.ui.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.traphan.currencyconverter.api.CurrencyApi
@@ -22,8 +23,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao, userCurrencyDao: UserCurrencyDao, application: Application): BaseViewModel() {
+class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao, userCurrencyDao: UserCurrencyDao,
+                                            application: Application): BaseViewModel() {
 
+    private val context: Context = application.baseContext
     private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao, userCurrencyDao, application)
     private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
     private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
@@ -33,10 +36,12 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     private lateinit var userCurrencySaveLiveData: MutableLiveData<Boolean>
     private lateinit var baseCurrency: CurrencyJoinImage
     private lateinit var idBaseCurrency: String
+    private var userCurrencyCurrent: List<UserCurrency>? = null
 
     fun getAllViewCurrency(): LiveData<Set<CurrencyViewEntity>> {
         loadAllUserCurrency().observeForever{
             if(it != null && it.isNotEmpty()) {
+                userCurrencyCurrent = it
                 var ids: List<String> = listOf()
                 it.forEach {
                     ids = ids.plusElement(it.idCurrency)
@@ -117,7 +122,23 @@ class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDa
     }
 
     fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
-
+        var switchUserCurrency: List<UserCurrency> = mutableListOf()
+        if (userCurrencyCurrent != null && userCurrencyCurrent!!.isNotEmpty()) {
+            userCurrencyCurrent!!.forEach {
+                switchUserCurrency = if (it.idCurrency == currencyViewEntity.idRemote) {
+                    val userCurrency = UserCurrency(null, it.idCurrency, true)
+                    switchUserCurrency.plusElement(userCurrency)
+                } else {
+                    val userCurrency = UserCurrency(null, it.idCurrency, false)
+                    switchUserCurrency.plusElement(userCurrency)
+                }
+            }
+        }
+        if (switchUserCurrency.isNotEmpty()) {
+            addDisposable(currencyRepository.insertAllUserCurrency(switchUserCurrency).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({Toast.makeText(context, "true", Toast.LENGTH_LONG).show()}, {Toast.makeText(context, it.message.toString(), Toast.LENGTH_LONG).show()})
+            )
+        }
     }
 
     fun isInternetAvailable(): Boolean {
