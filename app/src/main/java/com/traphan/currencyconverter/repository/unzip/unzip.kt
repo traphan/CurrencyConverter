@@ -2,15 +2,18 @@ package com.traphan.currencyconverter.repository.unzip
 
 import android.content.Context
 import android.os.Environment
+import com.traphan.currencyconverter.database.entity.ImageEntity
 import io.reactivex.Single
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-fun unpackZip(inputStream: InputStream, context: Context): Single<Map<String, String>> {
+fun unpackZip(inputStream: InputStream, context: Context): Single<List<ImageEntity>> {
+    val POSTFIX_ICON = "ICON"
+    val positionSubString = 3
+    var imageEntities: MutableList<ImageEntity> = mutableListOf()
     val `is`: InputStream
     val zis: ZipInputStream
-    val patches = mutableMapOf<String, String>()
     try {
         var filename: String
         `is` = inputStream
@@ -29,13 +32,28 @@ fun unpackZip(inputStream: InputStream, context: Context): Single<Map<String, St
             }
             fout.close()
             zis.closeEntry()
-            patches[filename.substring(0, filename.length - 4)] = path.toString() + filename
+            val id = filename.substring(0, positionSubString)
+            if (filename.substring(positionSubString + 1, filename.length - 4) == POSTFIX_ICON) {
+                if(imageEntities.contains(ImageEntity(id, null, null))) {
+                    val position = imageEntities.indexOf(ImageEntity(id, null, null))
+                    imageEntities[position] = ImageEntity(id, path.toString() + filename, imageEntities[position].images)
+                } else {
+                    imageEntities.add(ImageEntity(id,path.toString() + filename, null))
+                }
+            } else {
+                if(imageEntities.contains(ImageEntity(id, null, null))) {
+                    val position = imageEntities.indexOf(ImageEntity(id, null, null))
+                    imageEntities[position] = ImageEntity(id, imageEntities[position].icon, path.toString() + filename)
+                } else {
+                    imageEntities.add(ImageEntity(id,null, path.toString() + filename))
+                }
+            }
             ze = zis.nextEntry
         }
         zis.close()
     } catch (e: IOException) {
         e.printStackTrace()
-        return Single.just(patches)
+        return Single.just(imageEntities)
     }
-    return Single.just(patches)
+    return Single.just(imageEntities)
 }

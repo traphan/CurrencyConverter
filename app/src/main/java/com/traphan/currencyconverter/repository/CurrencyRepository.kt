@@ -1,17 +1,11 @@
 package com.traphan.currencyconverter.repository
 
-import android.content.Context
-import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import com.traphan.currencyconverter.database.entity.UserCurrency
 import io.reactivex.Completable
 import io.reactivex.Observable
 
 interface CurrencyRepository {
-
-    fun fetchCurrency(): Completable
-
-    fun getAllCurrency(): Observable<List<CurrencyEntity>>
 
     fun loadAllCurrencyJoin(): Observable<List<CurrencyJoinImage>>
 

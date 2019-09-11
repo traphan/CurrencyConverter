@@ -1,19 +1,11 @@
 package com.traphan.currencyconverter
 
-import android.annotation.SuppressLint
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.os.Build
-import android.provider.Settings
-import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.traphan.currencyconverter.api.CurrencyApi
 import com.traphan.currencyconverter.api.CurrencyRemote
 import com.traphan.currencyconverter.api.CurrencyRemoteImpl
@@ -26,7 +18,6 @@ import com.traphan.currencyconverter.database.datasource.UserCurrencyLocal
 import com.traphan.currencyconverter.database.datasourceimpl.CurrencyLocalImpl
 import com.traphan.currencyconverter.database.datasourceimpl.ImageLocalImpl
 import com.traphan.currencyconverter.database.datasourceimpl.UserCurrencyLocalImpl
-import com.traphan.currencyconverter.database.entity.ImageEntity
 import com.traphan.currencyconverter.repository.converter.CurrencyRemoteToLocalConverter
 import com.traphan.currencyconverter.repository.unzip.unpackZip
 import dagger.android.AndroidInjection
@@ -67,7 +58,6 @@ class ApiJobScheduler : JobService() {
 
     override fun onStopJob(p0: JobParameters?): Boolean {
         compositeDisposable.clear()
-        Toast.makeText(baseContext, "off Job", Toast.LENGTH_LONG).show()
         return true
     }
 
@@ -75,10 +65,7 @@ class ApiJobScheduler : JobService() {
         if(isInternetAvailable()) {
             compositeDisposable.add(
                 fetchCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                    {
-                        Toast.makeText(baseContext, "Job Good", Toast.LENGTH_LONG).show()
-                    },
-                    { Toast.makeText(baseContext, "Job NOT GOOD", Toast.LENGTH_LONG).show() })
+                    {}, {})
             )
             return true
         } else {
@@ -100,16 +87,11 @@ class ApiJobScheduler : JobService() {
     }
 
     private fun fetchImage() {
-        compositeDisposable.add(currencyRemote.fetchImages("https://drive.google.com/uc?id=16fHQOOKnv0kStSIy420MGNqF-hkIj6qr").subscribeOn(
+        compositeDisposable.add(currencyRemote.fetchImages("https://drive.google.com/uc?id=1wJyI1JEOhuVIR6jlm2RhJKSBezF5UKdT").subscribeOn(
             Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            unpackZip(it.byteStream(), baseContext).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{ patchs ->
-                run {
-                    var imagesEntity = listOf<ImageEntity>()
-                    imagesEntity = imagesEntity.plus(ImageEntity("USD", patchs["USD"]!!))
-                    imageLocal.insertOrUpdateAllImage(imagesEntity).subscribeOn(Schedulers.io()).observeOn(
-                        AndroidSchedulers.mainThread()).subscribe{run{ Log.d("1", "complete")}
-                    }
-                }
+            unpackZip(it.byteStream(), baseContext).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{ imageEntity ->
+                imageLocal.insertOrUpdateAllImage(imageEntity).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe{}
             }
         })
     }

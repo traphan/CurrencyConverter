@@ -5,10 +5,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.traphan.currencyconverter.api.CurrencyApi
 import com.traphan.currencyconverter.ui.base.BaseViewModel
 import com.traphan.currencyconverter.database.dao.CurrencyDao
-import com.traphan.currencyconverter.database.dao.ImageDao
 import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
@@ -24,12 +22,10 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
-class CurrencyViewModel @Inject constructor(currencyApi: CurrencyApi, currencyDao: CurrencyDao, imageDao: ImageDao, userCurrencyDao: UserCurrencyDao,
-                                            application: Application): BaseViewModel() {
+class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurrencyDao: UserCurrencyDao, application: Application): BaseViewModel() {
 
     private val context: Context = application.baseContext
-    private var currencyRepository: CurrencyRepository =
-        CurrencyRepositoryImpl(currencyDao, currencyApi, imageDao, userCurrencyDao, application)
+    private var currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao, userCurrencyDao, application)
     private var currencyViewEntitiesLiveData: MutableLiveData<Set<CurrencyViewEntity>> = MutableLiveData()
     private var currencyViewEntityLiveData: MutableLiveData<CurrencyViewEntity> = MutableLiveData()
     private var baseCurrencyViewEntityLiveData: MutableLiveData<List<BaseCurrencyViewEntity>> = MutableLiveData()
