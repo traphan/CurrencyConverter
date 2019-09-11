@@ -1,13 +1,12 @@
 package com.traphan.currencyconverter.ui.dialog
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.traphan.currencyconverter.R
 
-class NetworkDialog {
+class ExitDialog {
+
     fun show(activity: AppCompatActivity) {
         val alertDialog = build(activity)
         alertDialog.show()
@@ -15,20 +14,16 @@ class NetworkDialog {
 
     private fun build(activity: AppCompatActivity): AlertDialog {
         val alertDialogBuilder = AlertDialog.Builder(activity)
-        alertDialogBuilder.setTitle(activity.getString(R.string.network_msg_title))
+        alertDialogBuilder.setTitle(activity.getString(R.string.exit))
         alertDialogBuilder
-            .setMessage(activity.getString(R.string.network_msg))
+            .setMessage(activity.getString(R.string.exit_msg))
             .setCancelable(false)
             .setPositiveButton(activity.getString(R.string.yes), DialogInterface.OnClickListener { dialog, id ->
-                val dialogIntent = Intent(Settings.ACTION_WIFI_SETTINGS)
-                dialogIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                activity.startActivity(dialogIntent)
+                activity.finish()
             })
             .setNegativeButton(activity.getString(R.string.no), DialogInterface.OnClickListener { dialog, id ->
-                activity.finish()
+                dialog.dismiss()
             })
         return alertDialogBuilder.create()
     }
-
-
 }

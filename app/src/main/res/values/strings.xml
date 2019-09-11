@@ -8,4 +8,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="network_msg">Отсутвует подключение к сети. Включить wi-fi ?</string>
+    <string name="network_msg_title">Связь с удаленным сервером</string>
+    <string name="exit_msg">Вы хотите выйти из приложения ?</string>
+    <string name="exit">Выход</string>
 </resources>
