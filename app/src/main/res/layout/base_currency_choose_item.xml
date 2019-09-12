@@ -15,20 +15,24 @@
             android:layout_marginBottom="@dimen/base_margin"
             android:layout_marginTop="@dimen/base_margin"
             android:id="@+id/currency_icon"
+            android:src="@drawable/ic_russia"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline_left_margin"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/base_margin"
-            android:layout_marginTop="@dimen/base_margin"
+            android:maxLines="2"
+            android:minLines="1"
+            android:gravity="center"
             android:id="@+id/currency_information"
             app:layout_constraintEnd_toStartOf="@+id/guideline_left_reorder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/currency_icon"/>
+            app:layout_constraintStart_toEndOf="@+id/currency_icon"
+            android:layout_marginStart="@dimen/base_margin"
+            android:layout_marginEnd="@dimen/base_margin"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="0dp"

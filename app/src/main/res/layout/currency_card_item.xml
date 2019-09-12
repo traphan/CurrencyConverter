@@ -47,12 +47,14 @@
     <androidx.appcompat.widget.AppCompatTextView
             android:text="TextView"
             style="@style/BaseHeaderText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:id="@+id/name_currency"/>
+            android:layout_marginLeft="@dimen/base_margin"
+            android:layout_marginTop="@dimen/base_margin"
+            android:layout_marginRight="@dimen/base_margin"
+            android:id="@+id/name_currency"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
