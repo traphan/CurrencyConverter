@@ -87,7 +87,7 @@ class ApiJobScheduler : JobService() {
     }
 
     private fun fetchImage() {
-        compositeDisposable.add(currencyRemote.fetchImages("https://drive.google.com/uc?id=1wJyI1JEOhuVIR6jlm2RhJKSBezF5UKdT").subscribeOn(
+        compositeDisposable.add(currencyRemote.fetchImages("https://drive.google.com/uc?id=1-swLg3qum_73lJ1-G3ysQDsTx46OItNw").subscribeOn(
             Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
             unpackZip(it.byteStream(), baseContext).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{ imageEntity ->
                 imageLocal.insertOrUpdateAllImage(imageEntity).subscribeOn(Schedulers.io())

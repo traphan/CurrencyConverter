@@ -3,10 +3,13 @@ package com.traphan.currencyconverter.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.squareup.picasso.Picasso
 import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.adapters.CurrenciesAdapter
 import com.traphan.currencyconverter.ui.base.BaseFragment
@@ -61,7 +64,13 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
         currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(context!!, this))
         val startSnapHelper = PagerSnapHelper(object : RecyclerSnapItemListener {
             override fun onItemSnap(position: Int) {
-                background.setBackgroundResource(R.drawable.usa)
+                val uri = currenciesAdapter.getImageCurrency(position)
+                if (uri != "") {
+                    Picasso.get().load(currenciesAdapter.getImageCurrency(position)).into(background)
+                    background.visibility = VISIBLE
+                } else {
+                    background.visibility = GONE
+                }
             }
         })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)

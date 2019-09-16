@@ -6,8 +6,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.traphan.currencyconverter.R
-import com.traphan.currencyconverter.database.entity.UserCurrency
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyHeader
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyViewEntity
 import com.traphan.currencyconverter.ui.recyclerdragandrop.entity.RECYCLER_CARD_ITEM_TYPE
@@ -127,7 +127,11 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
         internal fun bind(position: Int) {
             val currency = currencyEntities?.get(position)
             if (currency is com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem) {
-                itemView.currency_icon.setImageResource(R.drawable.ic_russia)
+                if (currency.patch != null && currency.patch.isNotEmpty()) {
+                    Picasso.get().load("file://" + currency.patch).into(itemView.currency_icon)
+                } else {
+                    itemView.currency_icon.setImageResource(R.drawable.ic_russia)
+                }
                 itemView.currency_information.text = currency.name
                 itemView.reorder_item.setOnTouchListener { _, event ->
                     if (event.action == MotionEvent.ACTION_DOWN) {

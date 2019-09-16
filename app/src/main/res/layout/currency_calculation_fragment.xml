@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/background">
+        >
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -13,6 +13,16 @@
             android:id="@+id/guideline_toolbar"
             app:layout_constraintGuide_percent="0.07"
             android:orientation="horizontal"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:id="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"/>
 
     <include
             android:id="@+id/include"

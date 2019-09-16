@@ -159,4 +159,10 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
         }
     }
 
+    fun getImageCurrency(position: Int): String {
+        return if (currencyViewEntities != null && currencyViewEntities!!.size > position) {
+            "file://" + currencyViewEntities?.get(position)?.patchImage
+        } else ""
+    }
+
 }

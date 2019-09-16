@@ -85,10 +85,13 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                 if (it != null && it.isNotEmpty()) {
                     var baseCurrencyViewEntity: List<BaseCurrencyViewEntity> = listOf()
                     it.forEach {
+                        val iconPatch = if (it.imageEntity != null && it.imageEntity.isNotEmpty() && it.imageEntity[0].icon != null) {
+                            it.imageEntity[0].icon
+                        } else ""
                         baseCurrencyViewEntity = baseCurrencyViewEntity.plusElement(
                             BaseCurrencyItem(
                                 it.currencyEntity.charCode + " " + it.currencyEntity.name,
-                                "",
+                                iconPatch!!,
                                 it.currencyEntity.idRemote
                             )
                         )
@@ -127,10 +130,13 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                             if (swapCurrencyList != null && swapCurrencyList.isNotEmpty()) {
                                 var baseCurrencyViewEntity: List<BaseCurrencyViewEntity> = listOf()
                                 swapCurrencyList.forEach {
+                                    val iconPatch = if (it.imageEntity != null && it.imageEntity.isNotEmpty() && it.imageEntity[0].icon != null) {
+                                        it.imageEntity[0].icon
+                                    } else ""
                                     baseCurrencyViewEntity = baseCurrencyViewEntity.plusElement(
                                         BaseCurrencyItem(
                                             it.currencyEntity.charCode + " " + it.currencyEntity.name,
-                                            "",
+                                            iconPatch!!,
                                             it.currencyEntity.idRemote
                                         )
                                     )

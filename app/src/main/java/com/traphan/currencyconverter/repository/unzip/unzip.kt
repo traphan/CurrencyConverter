@@ -12,12 +12,11 @@ fun unpackZip(inputStream: InputStream, context: Context): Single<List<ImageEnti
     val POSTFIX_ICON = "ICON"
     val positionSubString = 3
     var imageEntities: MutableList<ImageEntity> = mutableListOf()
-    val `is`: InputStream
-    val zis: ZipInputStream
+    val `is`: InputStream = inputStream
+    val zis: ZipInputStream = ZipInputStream(BufferedInputStream(`is`))
+
     try {
         var filename: String
-        `is` = inputStream
-        zis = ZipInputStream(BufferedInputStream(`is`))
         var ze: ZipEntry?
         val buffer = ByteArray(1024)
         ze = zis.nextEntry
@@ -53,7 +52,10 @@ fun unpackZip(inputStream: InputStream, context: Context): Single<List<ImageEnti
         zis.close()
     } catch (e: IOException) {
         e.printStackTrace()
-        return Single.just(imageEntities)
+    }
+    finally {
+        zis.close()
+        `is`.close()
     }
     return Single.just(imageEntities)
 }
