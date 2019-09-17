@@ -7,18 +7,20 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.currency_card_item.view.*
 import java.lang.ClassCastException
 import com.traphan.currencyconverter.R
+import com.traphan.currencyconverter.ui.CurrencyCalculationAdapterDiffUtil
 import com.traphan.currencyconverter.ui.CurrencyViewEntity
 import kotlin.annotation.Target as Target1
 
 open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCalculation): RecyclerView.Adapter<CurrenciesAdapter.CurrencyHolder>() {
 
     private val activity = activity
-    private var currencyViewEntities: MutableList<CurrencyViewEntity>? = null
+    private var currencyViewEntities: MutableList<CurrencyViewEntity> = mutableListOf()
     private val currencyCalculation: CurrencyCalculation = currencyCalculation
     private var currentPosition: Int = 0
 
@@ -34,11 +36,7 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
     }
 
     override fun getItemCount(): Int {
-        return if (currencyViewEntities != null && currencyViewEntities?.isNotEmpty()!!) {
-            currencyViewEntities!!.size
-        } else {
-            0
-        }
+        return currencyViewEntities.size
     }
 
     override fun onBindViewHolder(holder: CurrencyHolder, position: Int) {
@@ -48,12 +46,15 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
     }
 
     fun setData(currencyViewEntities: MutableList<CurrencyViewEntity>) {
+//        notifyDataSetChanged()
+        val currencyDiffUtilCallback = CurrencyCalculationAdapterDiffUtil(this.currencyViewEntities!!, currencyViewEntities)
+        val currencyDiffResult = DiffUtil.calculateDiff(currencyDiffUtilCallback)
         this.currencyViewEntities = currencyViewEntities
-        notifyDataSetChanged()
+        currencyDiffResult.dispatchUpdatesTo(this)
     }
 
     fun setData(currencyViewEntity: CurrencyViewEntity) {
-        currencyViewEntities!![currentPosition] = currencyViewEntity
+        currencyViewEntities[currentPosition] = currencyViewEntity
         notifyItemChanged(currentPosition)
     }
 
@@ -150,7 +151,7 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             }
             itemView.switch_btn.setOnClickListener { switchCurrency(currencyViewEntity) }
             if (currencyViewEntity.patchImage != null) {
-                Picasso.get().load("file://" + currencyViewEntity.patchImage).into(itemView.image)
+                Picasso.get().load("file://" + currencyViewEntity.patchImage).placeholder(R.color.colorPrimary).error(R.color.colorPrimary).into(itemView.image)
             }
         }
 

@@ -16,7 +16,7 @@
             android:layout_marginTop="@dimen/base_margin"
             android:scaleType="fitXY"
             android:id="@+id/currency_icon"
-            android:src="@drawable/ic_russia"
+            android:src="@drawable/ic_simple_flag"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline_left_margin"/>

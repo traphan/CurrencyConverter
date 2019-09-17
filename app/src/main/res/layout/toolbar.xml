@@ -45,6 +45,7 @@
             android:layout_height="@dimen/toolbar_image_menu_size"
             android:scaleType="fitXY"
             android:id="@+id/menu"
+            android:visibility="gone"
             android:src="@drawable/menu_btn"
             android:background="@null"
             app:layout_constraintTop_toTopOf="@+id/guideline_top"
@@ -58,7 +59,7 @@
             android:id="@+id/all_currency"
             android:background="@null"
             app:layout_constraintEnd_toEndOf="@+id/guideline_right"
-            android:src="@drawable/all_currency_btn"
+            android:src="@drawable/ic_checklist"
             app:layout_constraintTop_toTopOf="@+id/guideline_top"
             app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"/>
 
@@ -69,7 +70,7 @@
             android:id="@+id/calculate_btn"
             android:scaleType="fitXY"
             android:background="@null"
-            android:src="@drawable/all_currency_btn"
+            android:src="@drawable/ic_calculation"
             android:layout_marginRight="@dimen/margin_toolbar_btn"
             app:layout_constraintEnd_toStartOf="@+id/all_currency"
             app:layout_constraintTop_toTopOf="@+id/guideline_top"

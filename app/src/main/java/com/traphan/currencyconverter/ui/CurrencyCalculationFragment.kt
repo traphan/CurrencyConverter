@@ -6,6 +6,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,12 +36,16 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
 
     lateinit var currencyViewModel: CurrencyViewModel
 
+    private lateinit var currencyRecalculate: LiveData<CurrencyViewEntity>
+
     override fun onItemClick(parentView: View, childView: View, position: Int) {
 
     }
 
     override fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float) {
-        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal, total).observe(this, Observer { currenciesAdapter.setData(it) })
+        currencyViewModel.getRecalculationCurrency(currencyViewEntity, nominal, total).observeOnce(this, Observer<CurrencyViewEntity> {
+            currenciesAdapter.setData(it)
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,9 +80,18 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
             }
         })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)
-        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies ->
+        currencyViewModel.getAllViewCurrency().observeOnce(this, Observer {currencies ->
             currenciesAdapter.setData(currencies.toMutableList())
         })
         toolbarListener(this)
+    }
+
+    fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                observer.onChanged(t)
+                removeObserver(this)
+            }
+        })
     }
 }

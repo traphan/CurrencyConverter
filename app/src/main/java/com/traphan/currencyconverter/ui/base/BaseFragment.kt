@@ -28,10 +28,8 @@ abstract class BaseFragment: Fragment() {
     internal fun toolbarListener(fragment: Fragment) {
         if (fragment is BaseCurrencyFragment) {
             calculate_btn.setOnClickListener { nextAction(CurrencyCalculationFragment.newInstance()) }
-            calculate_btn.setImageResource(R.drawable.all_currency_btn_pressed)
         } else {
             all_currency.setOnClickListener { nextAction(BaseCurrencyFragment.newInstance()) }
-            calculate_btn.setImageResource(R.drawable.all_currency_btn_pressed)
         }
     }
 

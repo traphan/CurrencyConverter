@@ -74,7 +74,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
         currencyViewEntity: CurrencyViewEntity,
         nominal: Float,
         total: Float
-    ): LiveData<CurrencyViewEntity> {
+    ): MutableLiveData<CurrencyViewEntity> {
         currencyViewEntityLiveData.value = getCalculationCurrency(currencyViewEntity, nominal, total)
         return currencyViewEntityLiveData
     }
@@ -233,5 +233,4 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
         userCurrencyOtherCurrencyIndex.value = indexNotBaseCurrency
         return userCurrencyOtherCurrencyIndex
     }
-
 }

@@ -128,9 +128,9 @@ class BaseCurrencyAdapter(dragListener: OnStartDragListener, context: Context): 
             val currency = currencyEntities?.get(position)
             if (currency is com.traphan.currencyconverter.ui.recyclerdragandrop.entity.BaseCurrencyItem) {
                 if (currency.patch != null && currency.patch.isNotEmpty()) {
-                    Picasso.get().load("file://" + currency.patch).into(itemView.currency_icon)
+                    Picasso.get().load("file://" + currency.patch).placeholder(R.drawable.ic_simple_flag).error(R.drawable.ic_simple_flag).into(itemView.currency_icon)
                 } else {
-                    itemView.currency_icon.setImageResource(R.drawable.ic_russia)
+                    itemView.currency_icon.setImageResource(R.drawable.ic_simple_flag)
                 }
                 itemView.currency_information.text = currency.name
                 itemView.reorder_item.setOnTouchListener { _, event ->
