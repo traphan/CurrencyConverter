@@ -4,6 +4,7 @@ import android.app.Activity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -152,6 +153,8 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             itemView.switch_btn.setOnClickListener { switchCurrency(currencyViewEntity) }
             if (currencyViewEntity.patchImage != null) {
                 Picasso.get().load("file://" + currencyViewEntity.patchImage).placeholder(R.color.colorPrimary).error(R.color.colorPrimary).into(itemView.image)
+            } else {
+                itemView.image.setImageResource(R.color.colorPrimary)
             }
         }
 

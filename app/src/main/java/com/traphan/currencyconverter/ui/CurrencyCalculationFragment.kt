@@ -80,7 +80,7 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
             }
         })
         startSnapHelper.attachToRecyclerView(currency_recycler_view)
-        currencyViewModel.getAllViewCurrency().observeOnce(this, Observer {currencies ->
+        currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies ->
             currenciesAdapter.setData(currencies.toMutableList())
         })
         toolbarListener(this)
