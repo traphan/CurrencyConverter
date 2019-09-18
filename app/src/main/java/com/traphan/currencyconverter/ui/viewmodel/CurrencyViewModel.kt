@@ -80,7 +80,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
     }
 
     private fun getBaseCurrencyUnsorted(): LiveData<List<BaseCurrencyViewEntity>> {
-        addDisposable(currencyRepository.loadAllCurrencyJoin().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+        addDisposable(currencyRepository.loadAllCurrencyJoin().subscribeOn(Schedulers.io()).subscribe {
             run {
                 if (it != null && it.isNotEmpty()) {
                     var baseCurrencyViewEntity: List<BaseCurrencyViewEntity> = listOf()

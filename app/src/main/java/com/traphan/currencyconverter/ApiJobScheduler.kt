@@ -64,7 +64,7 @@ class ApiJobScheduler : JobService() {
     override fun onStartJob(p0: JobParameters?): Boolean {
         if(isInternetAvailable()) {
             compositeDisposable.add(
-                fetchCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                fetchCurrency().subscribeOn(Schedulers.io()).subscribe(
                     {}, {})
             )
             return true
@@ -88,10 +88,9 @@ class ApiJobScheduler : JobService() {
 
     private fun fetchImage() {
         compositeDisposable.add(currencyRemote.fetchImages("https://drive.google.com/uc?id=1-swLg3qum_73lJ1-G3ysQDsTx46OItNw").subscribeOn(
-            Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            unpackZip(it.byteStream(), baseContext).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{ imageEntity ->
-                imageLocal.insertOrUpdateAllImage(imageEntity).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe{}
+            Schedulers.io()).subscribeOn(Schedulers.io()).subscribe{
+            unpackZip(it.byteStream(), baseContext).subscribeOn(Schedulers.io()).subscribe{ imageEntity ->
+                imageLocal.insertOrUpdateAllImage(imageEntity).subscribeOn(Schedulers.io()).subscribe({}, {})
             }
         })
     }

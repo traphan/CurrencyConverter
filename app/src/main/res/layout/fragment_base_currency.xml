@@ -28,6 +28,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
+            android:layout_marginTop="@dimen/base_margin"
             android:id="@+id/base_currency_recycler_view"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="@+id/guideline_left"
