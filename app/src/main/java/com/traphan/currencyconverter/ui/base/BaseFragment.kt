@@ -25,15 +25,16 @@ abstract class BaseFragment: Fragment() {
          this.supportFragmentManager = activity.supportFragmentManager
     }
 
-    internal fun toolbarListener(fragment: Fragment) {
+     open fun toolbarListener(fragment: Fragment) {
         if (fragment is BaseCurrencyFragment) {
-            calculate_btn.setOnClickListener { nextAction(CurrencyCalculationFragment.newInstance()) }
+            toolbar_btn.setBackgroundResource(R.drawable.ic_calculation)
         } else {
-            all_currency.setOnClickListener { nextAction(BaseCurrencyFragment.newInstance()) }
+            toolbar_btn.setBackgroundResource(R.drawable.ic_checklist)
+            toolbar_btn.setOnClickListener { nextAction(BaseCurrencyFragment.newInstance()) }
         }
     }
 
-    private fun nextAction(fragment: Fragment) {
+    protected fun nextAction(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.base_background, fragment).addToBackStack(null).commit()
     }
 

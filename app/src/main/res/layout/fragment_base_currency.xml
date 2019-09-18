@@ -28,27 +28,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/base_margin"
             android:id="@+id/base_currency_recycler_view"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline_left"
             app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"
-            app:layout_constraintBottom_toTopOf="@+id/guideline"></androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/base_margin"
-            android:layout_marginBottom="@dimen/base_margin"
-            android:text="@string/use_currency_txt"
-            android:id="@+id/use_currency_btn"
-            android:textColor="@color/white"
-            android:background="@drawable/button_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"
             app:layout_constraintStart_toStartOf="@+id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/base_currency_recycler_view"/>
+            android:layout_marginBottom="@dimen/base_margin"
+            android:layout_marginTop="@dimen/base_margin"></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -63,12 +50,5 @@
             android:id="@+id/guideline_right"
             app:layout_constraintGuide_percent="0.95"
             android:orientation="vertical"/>
-
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/guideline"
-            app:layout_constraintGuide_percent="0.9"
-            android:orientation="horizontal"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

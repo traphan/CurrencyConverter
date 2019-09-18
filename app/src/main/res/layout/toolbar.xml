@@ -56,23 +56,10 @@
             android:layout_width="@dimen/toolbar_image_size"
             android:layout_height="@dimen/toolbar_image_size"
             android:scaleType="fitXY"
-            android:id="@+id/all_currency"
+            android:id="@+id/toolbar_btn"
             android:background="@null"
             app:layout_constraintEnd_toEndOf="@+id/guideline_right"
-            android:src="@drawable/ic_checklist"
             app:layout_constraintTop_toTopOf="@+id/guideline_top"
             app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"/>
 
-
-    <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="@dimen/toolbar_image_size"
-            android:layout_height="@dimen/toolbar_image_size"
-            android:id="@+id/calculate_btn"
-            android:scaleType="fitXY"
-            android:background="@null"
-            android:src="@drawable/ic_calculation"
-            android:layout_marginRight="@dimen/margin_toolbar_btn"
-            app:layout_constraintEnd_toStartOf="@+id/all_currency"
-            app:layout_constraintTop_toTopOf="@+id/guideline_top"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

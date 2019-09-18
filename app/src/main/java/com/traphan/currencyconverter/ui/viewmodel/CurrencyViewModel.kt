@@ -2,7 +2,6 @@ package com.traphan.currencyconverter.ui.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.traphan.currencyconverter.ui.base.BaseViewModel
@@ -218,8 +217,8 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                     AndroidSchedulers.mainThread()
                 )
                     .subscribe(
-                        { Toast.makeText(context, "true", Toast.LENGTH_LONG).show() },
-                        { Toast.makeText(context, it.message.toString(), Toast.LENGTH_LONG).show() })
+                        { },
+                        {})
             )
         }
     }

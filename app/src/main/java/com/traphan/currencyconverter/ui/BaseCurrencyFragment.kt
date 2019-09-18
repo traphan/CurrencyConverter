@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -55,7 +55,6 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         base_currency_recycler_view.setHasFixedSize(true)
         base_currency_recycler_view.adapter = baseCurrencyAdapter
         base_currency_recycler_view.layoutManager = LinearLayoutManager(this.context)
-        use_currency_btn.setOnClickListener { saveUserCurrency() }
         val callback = SimpleItemTouchHelperCallback(baseCurrencyAdapter)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(base_currency_recycler_view)
@@ -69,8 +68,12 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
         toolbarListener(this)
     }
 
+    override fun toolbarListener(fragment: Fragment) {
+        super.toolbarListener(fragment)
+        toolbar_btn.setOnClickListener { saveUserCurrency() }
+    }
+
     private fun saveUserCurrency() {
-        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this,
-            Observer { calculate_btn.performClick() })
+        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this, Observer { nextAction(CurrencyCalculationFragment.newInstance())})
     }
 }
