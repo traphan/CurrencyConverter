@@ -1,6 +1,7 @@
 package com.traphan.currencyconverter.ui.recyclerdragandrop.helpers
 
 import android.graphics.Canvas
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -42,9 +43,15 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // Fade out the view as it is swiped out of the parent's bounds
-            val alpha = ALPHA_FULL - Math.abs(dX) / (viewHolder.itemView.width as? Float)!!
-            viewHolder.itemView?.alpha = alpha
-            viewHolder.itemView.translationX = dX
+            try {
+                val alpha = ALPHA_FULL - Math.abs(dX) / (viewHolder.itemView.width.toFloat())
+                viewHolder.itemView.alpha = alpha
+                viewHolder.itemView.translationX = dX
+            }
+            catch (e: ClassCastException) {
+                Log.d("1", e.message.toString())
+            }
+
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }

@@ -1,6 +1,7 @@
 package com.traphan.currencyconverter.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -32,7 +33,7 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
         fun newInstance() = CurrencyCalculationFragment()
     }
 
-    private lateinit var currenciesAdapter: CurrenciesAdapter
+    lateinit var currenciesAdapter: CurrenciesAdapter
 
     lateinit var currencyViewModel: CurrencyViewModel
 
@@ -83,6 +84,12 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
         currencyViewModel.getAllViewCurrency().observe(this, Observer {currencies ->
             currenciesAdapter.setData(currencies.toMutableList())
         })
+        currenciesAdapter.positionItemFocus.observe(this, Observer {
+            Log.d("1", "scroll to $it")
+            if (it != null) {
+                (currency_recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(it)
+            }
+        })
         toolbarListener(this)
     }
 
@@ -94,4 +101,5 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
             }
         })
     }
+
 }

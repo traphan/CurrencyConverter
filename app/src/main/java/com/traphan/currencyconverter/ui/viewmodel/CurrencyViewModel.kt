@@ -58,11 +58,8 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                                 baseCurrency = it
                             }
                         }
-                        currencyViewEntitiesLiveData.value = getCalculationAllCurrency(
-                            currencies.filter { it.currencyEntity.idRemote != idBaseCurrency },
-                            baseCurrency
-                        )
-
+                        currencyViewEntitiesLiveData.postValue(getCalculationAllCurrency(
+                            currencies.filter { it.currencyEntity.idRemote != idBaseCurrency }, baseCurrency))
                     })
             }
         }
@@ -74,7 +71,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
         nominal: Float,
         total: Float
     ): MutableLiveData<CurrencyViewEntity> {
-        currencyViewEntityLiveData.value = getCalculationCurrency(currencyViewEntity, nominal, total)
+        currencyViewEntityLiveData.postValue(getCalculationCurrency(currencyViewEntity, nominal, total))
         return currencyViewEntityLiveData
     }
 
@@ -95,7 +92,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                             )
                         )
                     }
-                    baseCurrencyViewEntityLiveData.value = baseCurrencyViewEntity
+                    baseCurrencyViewEntityLiveData.postValue(baseCurrencyViewEntity)
                 }
             }
         })
@@ -141,7 +138,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                                     )
                                 }
                                 indexNotBaseCurrency--
-                                baseCurrencyViewEntityLiveData.value = baseCurrencyViewEntity
+                                baseCurrencyViewEntityLiveData.postValue(baseCurrencyViewEntity)
                             }
                         }
                     }
@@ -158,7 +155,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
         userCurrencySaveLiveData = MutableLiveData()
         addDisposable(
             currencyRepository.insertAllUserCurrency(getAllUserCurrency(userCurrencies)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ userCurrencySaveLiveData.value = true }, { userCurrencySaveLiveData.value = false })
+                .subscribe({ userCurrencySaveLiveData.postValue(true)  }, { userCurrencySaveLiveData.postValue(false)  })
         )
         return userCurrencySaveLiveData
     }
@@ -167,8 +164,8 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
         addDisposable(
             currencyRepository.getCountUserCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { userCurrencyCountLiveData.value = it != null && it[0]!! > 1 },
-                    { userCurrencyCountLiveData.value = false })
+                    { userCurrencyCountLiveData.postValue(it != null && it[0]!! > 1 )},
+                    { userCurrencyCountLiveData.postValue(false)})
         )
         return userCurrencyCountLiveData
     }
@@ -176,7 +173,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
     private fun loadAllUserCurrency(): LiveData<List<UserCurrency>> {
         addDisposable(currencyRepository.loadAllUserCurrency().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe { userCurrencies ->
             run {
-                userCurrencyLiveData.value = userCurrencies
+                userCurrencyLiveData.postValue(userCurrencies)
             }
         })
         return userCurrencyLiveData
@@ -229,7 +226,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
 
     fun getUserCurrencyOtherCurrencyIndex(): LiveData<Int> {
         userCurrencyOtherCurrencyIndex = MutableLiveData()
-        userCurrencyOtherCurrencyIndex.value = indexNotBaseCurrency
+        userCurrencyOtherCurrencyIndex.postValue(indexNotBaseCurrency)
         return userCurrencyOtherCurrencyIndex
     }
 }
