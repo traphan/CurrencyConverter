@@ -29,7 +29,6 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
     private val currencyCalculation: CurrencyCalculation = currencyCalculation
     private var currentPosition: Int = 0
     var positionItemFocus = MutableLiveData<Int>()
-    var isInputNow = false
 
     interface CurrencyCalculation {
         fun calculate(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float)
@@ -64,6 +63,8 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
         super.onViewAttachedToWindow(holder)
         if (holder.adapterPosition == positionItemFocus.value) {
             holder.itemView.inputValueCurrency.requestFocus()
+        } else {
+            holder.itemView.inputValueCurrency.clearFocus()
         }
         Log.d("1", "onViewAttachedToWindow " + positionItemFocus.value.toString())
     }
@@ -89,7 +90,7 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             val displayMetrics = DisplayMetrics()
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             val width = displayMetrics.widthPixels
-            itemView.layoutParams = RecyclerView.LayoutParams((width * 0.85f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
+            itemView.layoutParams = RecyclerView.LayoutParams((width * 1f).toInt(), RecyclerView.LayoutParams.WRAP_CONTENT)
 
             itemView.outputValueCurrency.addTextChangedListener(object : TextWatcher {
                 private var isInflate = true
@@ -178,21 +179,22 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
             } else {
                 itemView.image.setImageResource(R.color.colorPrimary)
             }
-            itemView.inputValueCurrency.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-                if (!b && position == positionItemFocus.value) {
-                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                    imm!!.hideSoftInputFromWindow(itemView.inputValueCurrency.windowToken, 0)
-                    itemView.inputValueCurrency.clearFocus()
-                    isInputNow = false
-//                    android.os.Handler().postDelayed({positionItemFocus.value = null}, 300)
-                } else {
-                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                    imm!!.showSoftInput(itemView.inputValueCurrency, 0)
-                    isInputNow = true
-                    android.os.Handler().postDelayed({positionItemFocus.value = null}, 300)
-
-                }
-            }
+//            itemView.inputValueCurrency.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+//                Log.d("1", "onFocusChangeListener " + b.toString())
+//                if (!b && position == positionItemFocus.value) {
+////                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+////                    imm!!.hideSoftInputFromWindow(itemView.inputValueCurrency.windowToken, 0)
+//                    android.os.Handler().postDelayed({positionItemFocus.value = null}, 500)
+//
+//                    isInputNow = false
+////                    android.os.Handler().postDelayed({positionItemFocus.value = null}, 300)
+//                } else {
+//                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+//                    imm!!.showSoftInput(itemView.inputValueCurrency, 0)
+//                    isInputNow = true
+//
+//                }
+//            }
         }
 
         private fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {
