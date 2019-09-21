@@ -5,8 +5,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.traphan.currencyconverter.R
-import com.traphan.currencyconverter.ui.BaseCurrencyFragment
-import com.traphan.currencyconverter.ui.CurrencyCalculationFragment
+import com.traphan.currencyconverter.ui.fragment.BaseCurrencyFragment
 import com.traphan.currencyconverter.viewmodelfactory.ViewModelFactory
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject

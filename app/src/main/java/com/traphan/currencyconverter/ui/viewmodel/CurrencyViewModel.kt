@@ -8,7 +8,7 @@ import com.traphan.currencyconverter.ui.base.BaseViewModel
 import com.traphan.currencyconverter.database.dao.CurrencyDao
 import com.traphan.currencyconverter.repository.CurrencyRepository
 import com.traphan.currencyconverter.repository.CurrencyRepositoryImpl
-import com.traphan.currencyconverter.ui.CurrencyViewEntity
+import com.traphan.currencyconverter.ui.uimodel.CurrencyViewEntity
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationAllCurrency
 import com.traphan.currencyconverter.CurrencyCalculation.getCalculationCurrency
 import com.traphan.currencyconverter.database.dao.UserCurrencyDao

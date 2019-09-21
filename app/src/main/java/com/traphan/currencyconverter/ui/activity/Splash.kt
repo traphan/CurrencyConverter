@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.activity
 
 import android.Manifest
 import android.app.Service
@@ -21,6 +21,8 @@ import dagger.android.support.HasSupportFragmentInjector
 import java.util.ArrayList
 import javax.inject.Inject
 import com.traphan.currencyconverter.R
+import com.traphan.currencyconverter.ui.fragment.BaseCurrencyFragment
+import com.traphan.currencyconverter.ui.fragment.CurrencyCalculationFragment
 import com.traphan.currencyconverter.ui.dialog.NetworkDialog
 
 

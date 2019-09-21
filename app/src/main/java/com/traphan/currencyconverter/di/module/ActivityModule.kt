@@ -1,6 +1,6 @@
 package com.traphan.currencyconverter.di.module
 
-import com.traphan.currencyconverter.ui.Splash
+import com.traphan.currencyconverter.ui.activity.Splash
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

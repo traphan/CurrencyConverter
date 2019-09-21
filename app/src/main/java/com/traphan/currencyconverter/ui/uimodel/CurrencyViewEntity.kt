@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.uimodel
 
 data class CurrencyViewEntity(val name: String, val charCode: String, val rate: Float, var currentNominal: Float, var total: Float, var cursorPositionNominal: Int,
                               var cursorPositionTotal: Int, val patchImage: String?, val idRemote: String) {

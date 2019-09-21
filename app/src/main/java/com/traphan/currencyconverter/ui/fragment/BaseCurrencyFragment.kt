@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -74,6 +74,8 @@ class BaseCurrencyFragment : BaseFragment(), OnStartDragListener {
     }
 
     private fun saveUserCurrency() {
-        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this, Observer { nextAction(CurrencyCalculationFragment.newInstance())})
+        currencyViewModel.insertAllUserCurrency(baseCurrencyAdapter.getAllUserCurrency()).observe(this, Observer { nextAction(
+            CurrencyCalculationFragment.newInstance()
+        )})
     }
 }

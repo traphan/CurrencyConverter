@@ -1,7 +1,7 @@
 package com.traphan.currencyconverter.di.module
 
-import com.traphan.currencyconverter.ui.BaseCurrencyFragment
-import com.traphan.currencyconverter.ui.CurrencyCalculationFragment
+import com.traphan.currencyconverter.ui.fragment.BaseCurrencyFragment
+import com.traphan.currencyconverter.ui.fragment.CurrencyCalculationFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

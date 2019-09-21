@@ -1,6 +1,7 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.util
 
 import androidx.recyclerview.widget.DiffUtil
+import com.traphan.currencyconverter.ui.uimodel.CurrencyViewEntity
 
 class CurrencyCalculationAdapterDiffUtil(oldCurrencies: List<CurrencyViewEntity>, newCurrencies: List<CurrencyViewEntity>): DiffUtil.Callback() {
 

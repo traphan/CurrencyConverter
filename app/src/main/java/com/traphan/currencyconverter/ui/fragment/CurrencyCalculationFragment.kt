@@ -1,4 +1,4 @@
-package com.traphan.currencyconverter.ui
+package com.traphan.currencyconverter.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso
 import com.traphan.currencyconverter.R
 import com.traphan.currencyconverter.ui.adapters.CurrenciesAdapter
 import com.traphan.currencyconverter.ui.base.BaseFragment
+import com.traphan.currencyconverter.ui.uimodel.CurrencyViewEntity
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
 import com.traphan.recycler.PagerSnapHelper
 import com.traphan.recycler.RecyclerItemClickListener
