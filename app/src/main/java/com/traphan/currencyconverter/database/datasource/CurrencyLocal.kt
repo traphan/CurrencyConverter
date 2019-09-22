@@ -4,6 +4,7 @@ import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 interface CurrencyLocal {
 
@@ -17,6 +18,6 @@ interface CurrencyLocal {
 
     fun loadAllCurrencyJoinImage(): Observable<List<CurrencyJoinImage>>
 
-    fun loadCurrencyJoinImage(currencyIds: List<String>): Observable<List<CurrencyJoinImage>>
+    fun loadCurrencyJoinImage(currencyIds: List<String>): Single<List<CurrencyJoinImage>>
 
 }

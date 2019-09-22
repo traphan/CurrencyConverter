@@ -4,6 +4,7 @@ import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import com.traphan.currencyconverter.database.entity.UserCurrency
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 interface CurrencyRepository {
 
@@ -15,7 +16,7 @@ interface CurrencyRepository {
 
     fun getCountUserCurrency(): Observable<List<Int>>
 
-    fun loadAllCurrencyJoin(ids: List<String>): Observable<List<CurrencyJoinImage>>
+    fun loadAllCurrencyJoin(ids: List<String>): Single<List<CurrencyJoinImage>>
 
     fun isInternetAvailable(): Boolean
 }

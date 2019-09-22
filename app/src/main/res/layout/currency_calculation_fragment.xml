@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
->
+        android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -22,8 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar" app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"/>
 
     <include
             android:id="@+id/include"
@@ -42,8 +39,27 @@
             android:id="@+id/currency_recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/keyboard"></androidx.recyclerview.widget.RecyclerView>
+
+    <com.traphan.currencyconverter.ui.KeyboardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/keyboard"
+            android:visibility="gone"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline_toolbar"></androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"></com.traphan.currencyconverter.ui.KeyboardView>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline"
+            app:layout_constraintGuide_percent="0.65"
+            android:orientation="horizontal"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

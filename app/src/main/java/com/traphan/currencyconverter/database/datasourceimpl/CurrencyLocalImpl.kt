@@ -6,10 +6,11 @@ import com.traphan.currencyconverter.database.entity.CurrencyEntity
 import com.traphan.currencyconverter.database.entity.CurrencyJoinImage
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class CurrencyLocalImpl(private val currencyDao: CurrencyDao) : CurrencyLocal {
 
-    override fun loadCurrencyJoinImage(currencyIds: List<String>): Observable<List<CurrencyJoinImage>> {
+    override fun loadCurrencyJoinImage(currencyIds: List<String>): Single<List<CurrencyJoinImage>> {
         return currencyDao.loadCurrencyJoinImage(currencyIds)
     }
 

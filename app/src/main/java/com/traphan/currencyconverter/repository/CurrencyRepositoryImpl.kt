@@ -25,6 +25,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import com.traphan.currencyconverter.ApiJobScheduler
+import io.reactivex.Single
 
 
 class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val userCurrencyDao: UserCurrencyDao, private val context: Context): CurrencyRepository {
@@ -58,7 +59,7 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
         return userCurrencyLocal.getCount()
     }
 
-    override fun loadAllCurrencyJoin(ids: List<String>): Observable<List<CurrencyJoinImage>> {
+    override fun loadAllCurrencyJoin(ids: List<String>): Single<List<CurrencyJoinImage>> {
         return currencyLocal.loadCurrencyJoinImage(ids)
     }
     @Suppress("DEPRECATION")

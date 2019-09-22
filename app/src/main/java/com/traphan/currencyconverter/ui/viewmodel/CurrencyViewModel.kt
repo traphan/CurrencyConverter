@@ -2,6 +2,7 @@ package com.traphan.currencyconverter.ui.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.traphan.currencyconverter.ui.base.BaseViewModel
@@ -49,28 +50,23 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
                         idBaseCurrency = it.idCurrency
                     }
                 }
-                addDisposable(currencyRepository.loadAllCurrencyJoin(ids).subscribeOn(Schedulers.io()).observeOn(
-                    AndroidSchedulers.mainThread()
-                )
-                    .subscribe { currencies ->
+                addDisposable(currencyRepository.loadAllCurrencyJoin(ids).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ currencies ->
                         currencies.forEach {
                             if (it.currencyEntity.idRemote == idBaseCurrency) {
                                 baseCurrency = it
                             }
                         }
                         currencyViewEntitiesLiveData.postValue(getCalculationAllCurrency(
-                            currencies.filter { it.currencyEntity.idRemote != idBaseCurrency }, baseCurrency))
-                    })
+                            currencies.filter { it.currencyEntity.idRemote != idBaseCurrency }, baseCurrency
+                        )
+                        )
+                    }, { Log.d("1", it.message)}))
             }
         }
         return currencyViewEntitiesLiveData
     }
 
-    fun getRecalculationCurrency(
-        currencyViewEntity: CurrencyViewEntity,
-        nominal: Float,
-        total: Float
-    ): MutableLiveData<CurrencyViewEntity> {
+    fun getRecalculationCurrency(currencyViewEntity: CurrencyViewEntity, nominal: Float, total: Float): MutableLiveData<CurrencyViewEntity> {
         currencyViewEntityLiveData.postValue(getCalculationCurrency(currencyViewEntity, nominal, total))
         return currencyViewEntityLiveData
     }
@@ -209,14 +205,7 @@ class CurrencyViewModel @Inject constructor(currencyDao: CurrencyDao, userCurren
             }
         }
         if (switchUserCurrency.isNotEmpty()) {
-            addDisposable(
-                currencyRepository.insertAllUserCurrency(switchUserCurrency).subscribeOn(Schedulers.io()).observeOn(
-                    AndroidSchedulers.mainThread()
-                )
-                    .subscribe(
-                        { },
-                        {})
-            )
+            addDisposable(currencyRepository.insertAllUserCurrency(switchUserCurrency).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({}, {}))
         }
     }
 
