@@ -1,6 +1,7 @@
 package com.traphan.currencyconverter.ui.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -35,9 +36,9 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
     }
 
     override fun showKeyboard(editText: EditText) {
-        keyboard.setEditText(editText)
         keyboard.setKeyboardControlListener(this)
         keyboard.visibility = VISIBLE
+        keyboard.setEditText(editText)
     }
 
     override fun switchCurrency(currencyViewEntity: CurrencyViewEntity) {

@@ -38,10 +38,11 @@
 
     <style name="keyboard_button">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:background">@drawable/keyboard_button_bg</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>

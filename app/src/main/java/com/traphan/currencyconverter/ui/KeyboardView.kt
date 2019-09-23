@@ -2,12 +2,17 @@ package com.traphan.currencyconverter.ui
 
 import androidx.annotation.IdRes
 import android.content.Context
+import android.os.Handler
+import android.text.Selection
+import android.text.Spannable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import com.traphan.currencyconverter.R
+
 
 class KeyboardView : FrameLayout, View.OnClickListener {
 
@@ -16,10 +21,10 @@ class KeyboardView : FrameLayout, View.OnClickListener {
     }
 
     private var keyboardControl: KeyboardControl? = null
-    private var mPasswordField: EditText? = null
-
+    private var inputEditText: EditText? = null
+    private var selectorPosition: Int = 0
     val inputText: String
-        get() = mPasswordField!!.text.toString()
+        get() = inputEditText!!.text.toString()
 
     constructor(context: Context) : super(context) {
         init()
@@ -34,12 +39,26 @@ class KeyboardView : FrameLayout, View.OnClickListener {
     }
 
     private fun init() {
-        View.inflate(context, R.layout.keyboard, this)
+        View.inflate(context, R.layout.keyboard_new, this)
         initViews()
     }
 
+    private fun initSelector() {
+        selectorPosition = inputEditText!!.text.indexOf('.')
+//        Selection.setSelection(inputEditText!!.text as Spannable, selectorPosition)
+//        inputEditText!!.setTextIsSelectable(true)
+        inputEditText!!.isCursorVisible = true
+        Log.d("1", "inputEditText!!.setSelection(selectorPosition) $selectorPosition")
+        inputEditText!!.setSelection(selectorPosition)
+    }
+
     fun setEditText(editText: EditText?) {
-        mPasswordField = editText
+        if (editText != null) {
+            inputEditText = editText
+            initSelector()
+        } else {
+            inputEditText = null
+        }
     }
 
     fun setKeyboardControlListener(keyboardControl: KeyboardControl?) {
@@ -65,16 +84,18 @@ class KeyboardView : FrameLayout, View.OnClickListener {
     override fun onClick(v: View) {
         // handle number button click
         if (v.tag != null && "number_button" == v.tag) {
-            mPasswordField!!.append((v as TextView).text)
+            inputEditText!!.append((v as TextView).text)
             return
         }
         when (v.id) {
             R.id.t9_key_clear -> { // handle clear button
+                inputEditText!!.isCursorVisible = false
+//                inputEditText!!.setTextIsSelectable(false)
                 keyboardControl!!.hideKeyboard()
             }
             R.id.t9_key_backspace -> { // handle backspace button
                 // delete one character
-                val editable = mPasswordField!!.text
+                val editable = inputEditText!!.text
                 val charCount = editable.length
                 if (charCount > 0) {
                     editable.delete(charCount - 1, charCount)

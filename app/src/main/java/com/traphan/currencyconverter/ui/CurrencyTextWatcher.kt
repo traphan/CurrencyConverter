@@ -11,7 +11,7 @@ class CurrencyTextWatcher(currencyViewEntity: CurrencyViewEntity, isInput: Boole
 
     private val currencyViewEntity: CurrencyViewEntity = currencyViewEntity
     private val currentEditText: EditText = currentEditText
-    private val isInput: Boolean = isInput
+    private var isInput: Boolean = isInput
     private val onChangeCurrency: OnChangeCurrency = onChangeCurrency
     private val writingEditText: EditText = writingEditText
 
@@ -55,5 +55,6 @@ class CurrencyTextWatcher(currencyViewEntity: CurrencyViewEntity, isInput: Boole
 
     fun clear() {
         currentEditText.removeTextChangedListener(this)
+        Log.d("1", "clear TextChangedListener")
     }
 }

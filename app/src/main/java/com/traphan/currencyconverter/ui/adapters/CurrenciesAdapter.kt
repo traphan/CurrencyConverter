@@ -75,16 +75,18 @@ open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCa
                 itemView.image.setImageResource(R.color.colorPrimary)
             }
             itemView.inputValueCurrency.setOnClickListener {
+                currencyTextWatcher?.clear()
                 currencyTextWatcher = CurrencyTextWatcher(currencyViewEntities[position], true, itemView.outputValueCurrency, itemView.inputValueCurrency,
                     this@CurrenciesAdapter)
                 itemView.inputValueCurrency.addTextChangedListener(currencyTextWatcher)
                 showKeyboard(itemView.inputValueCurrency)
             }
             itemView.outputValueCurrency.setOnClickListener {
+                currencyTextWatcher?.clear()
                 currencyTextWatcher = CurrencyTextWatcher(currencyViewEntities[position], false, itemView.inputValueCurrency, itemView.outputValueCurrency,
                     this@CurrenciesAdapter)
                 itemView.outputValueCurrency.addTextChangedListener(currencyTextWatcher)
-                showKeyboard(itemView.inputValueCurrency)
+                showKeyboard(itemView.outputValueCurrency)
             }
         }
 
