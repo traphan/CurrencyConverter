@@ -10,7 +10,7 @@ data class UserCurrency(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val currencyRemoteId: Int ?,
+    val id: Int ?,
 
 
     @ColumnInfo(name = "id_currency")

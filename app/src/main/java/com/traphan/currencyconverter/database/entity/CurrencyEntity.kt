@@ -8,10 +8,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "currency")
 data class CurrencyEntity (
 
-//    @ColumnInfo(name = "id")
-//    @PrimaryKey(autoGenerate = true)
-//    val idLocal : Long,
-
     @PrimaryKey
     @ColumnInfo(name = "id_remote")
     val idRemote : String,

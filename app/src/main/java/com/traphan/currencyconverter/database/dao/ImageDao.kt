@@ -22,4 +22,7 @@ interface ImageDao {
 
     @Query("SELECT * FROM images WHERE id_remote = :id")
     fun loadImage(id: String): Observable<ImageEntity>
+
+    @Query("SELECT COUNT(1) FROM images")
+    fun getCount() : Observable<List<Int>>
 }
