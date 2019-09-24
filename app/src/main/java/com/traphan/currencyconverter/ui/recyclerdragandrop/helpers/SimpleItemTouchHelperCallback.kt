@@ -24,6 +24,9 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
             return makeMovementFlags(dragFlags, swipeFlags)
         }
     }
+    override fun isItemViewSwipeEnabled(): Boolean {
+        return false
+    }
 
     override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         if (source.itemViewType != target.itemViewType) {

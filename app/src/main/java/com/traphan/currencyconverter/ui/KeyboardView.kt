@@ -2,11 +2,7 @@ package com.traphan.currencyconverter.ui
 
 import androidx.annotation.IdRes
 import android.content.Context
-import android.os.Handler
-import android.text.Selection
-import android.text.Spannable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.EditText
@@ -39,23 +35,13 @@ class KeyboardView : FrameLayout, View.OnClickListener {
     }
 
     private fun init() {
-        View.inflate(context, R.layout.keyboard_new, this)
+        View.inflate(context, R.layout.keyboard, this)
         initViews()
-    }
-
-    private fun initSelector() {
-        selectorPosition = inputEditText!!.text.indexOf('.')
-//        Selection.setSelection(inputEditText!!.text as Spannable, selectorPosition)
-//        inputEditText!!.setTextIsSelectable(true)
-        inputEditText!!.isCursorVisible = true
-        Log.d("1", "inputEditText!!.setSelection(selectorPosition) $selectorPosition")
-        inputEditText!!.setSelection(selectorPosition)
     }
 
     fun setEditText(editText: EditText?) {
         if (editText != null) {
             inputEditText = editText
-            initSelector()
         } else {
             inputEditText = null
         }
@@ -84,13 +70,16 @@ class KeyboardView : FrameLayout, View.OnClickListener {
     override fun onClick(v: View) {
         // handle number button click
         if (v.tag != null && "number_button" == v.tag) {
-            inputEditText!!.append((v as TextView).text)
-            return
+            if (inputEditText!!.text.toString() == "0") {
+                inputEditText!!.setText((v as TextView).text)
+                return
+            } else {
+                inputEditText!!.append((v as TextView).text)
+                return
+            }
         }
         when (v.id) {
             R.id.t9_key_clear -> { // handle clear button
-                inputEditText!!.isCursorVisible = false
-//                inputEditText!!.setTextIsSelectable(false)
                 keyboardControl!!.hideKeyboard()
             }
             R.id.t9_key_backspace -> { // handle backspace button
@@ -99,6 +88,9 @@ class KeyboardView : FrameLayout, View.OnClickListener {
                 val charCount = editable.length
                 if (charCount > 0) {
                     editable.delete(charCount - 1, charCount)
+                }
+                if (editable.isEmpty()) {
+                    inputEditText!!.append("0")
                 }
             }
         }

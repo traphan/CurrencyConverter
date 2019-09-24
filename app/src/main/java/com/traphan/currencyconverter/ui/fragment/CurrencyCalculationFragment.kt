@@ -76,7 +76,7 @@ class CurrencyCalculationFragment : BaseFragment(), RecyclerItemClickListener.On
 
     private fun initialiseView() {
         currencyViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
-        currenciesAdapter = CurrenciesAdapter(getActivity()!!, this)
+        currenciesAdapter = CurrenciesAdapter( this)
         currency_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         currency_recycler_view.adapter = currenciesAdapter
         currency_recycler_view.addOnItemTouchListener(RecyclerItemClickListener(context!!, this))

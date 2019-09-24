@@ -1,6 +1,5 @@
 package com.traphan.currencyconverter.ui.adapters
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import kotlinx.android.synthetic.main.currency_card_item.view.*
 import com.traphan.currencyconverter.ui.util.CurrencyCalculationAdapterDiffUtil
 import com.traphan.currencyconverter.ui.uimodel.CurrencyViewEntity
 
-open class CurrenciesAdapter(activity: Activity, currencyCalculation: CurrencyCalculation): RecyclerView.Adapter<CurrenciesAdapter.CurrencyHolder>(), CurrencyTextWatcher.OnChangeCurrency {
+open class CurrenciesAdapter(currencyCalculation: CurrencyCalculation): RecyclerView.Adapter<CurrenciesAdapter.CurrencyHolder>(), CurrencyTextWatcher.OnChangeCurrency {
 
     private var currencyViewEntities: MutableList<CurrencyViewEntity> = mutableListOf()
     private val currencyCalculation: CurrencyCalculation = currencyCalculation
