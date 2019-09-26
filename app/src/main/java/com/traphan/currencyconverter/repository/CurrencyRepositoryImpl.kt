@@ -1,10 +1,6 @@
 package com.traphan.currencyconverter.repository
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
 import android.content.Context
-import android.content.Context.JOB_SCHEDULER_SERVICE
 import com.traphan.currencyconverter.api.CurrencyRemoteImpl
 import com.traphan.currencyconverter.api.CurrencyApi
 import com.traphan.currencyconverter.api.CurrencyRemote
@@ -24,21 +20,19 @@ import io.reactivex.schedulers.Schedulers
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import com.traphan.currencyconverter.ApiJobScheduler
+import com.traphan.currencyconverter.repository.converter.CurrencyRemoteToLocalConverter
+import com.traphan.currencyconverter.repository.unzip.unpackZip
 import io.reactivex.Single
 
 
-class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val userCurrencyDao: UserCurrencyDao, private val context: Context): CurrencyRepository {
+class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, private val currencyApi: CurrencyApi,
+                                         private val userCurrencyDao: UserCurrencyDao, private val imageDao: ImageDao,
+                                         private val context: Context): CurrencyRepository {
 
     private val currencyLocal: CurrencyLocal = CurrencyLocalImpl(currencyDao)
     private val userCurrencyLocal = UserCurrencyLocalImpl(userCurrencyDao)
-    private val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-    private val componentName:ComponentName = ComponentName(context, ApiJobScheduler::class.java)
-    private val jobInfo:JobInfo = JobInfo.Builder(1, componentName).setOverrideDeadline(0).build()
-
-    init {
-        jobScheduler.schedule(jobInfo)
-    }
+    private val currencyRemote: CurrencyRemote = CurrencyRemoteImpl(currencyApi)
+    private val imageLocal: ImageLocal = ImageLocalImpl(imageDao)
 
     override fun loadAllCurrencyJoin(): Observable<List<CurrencyJoinImage>> {
         return currencyLocal.loadAllCurrencyJoinImage()
@@ -62,6 +56,29 @@ class CurrencyRepositoryImpl constructor(private val currencyDao: CurrencyDao, p
     override fun loadAllCurrencyJoin(ids: List<String>): Single<List<CurrencyJoinImage>> {
         return currencyLocal.loadCurrencyJoinImage(ids)
     }
+
+    override fun fetchCurrency(): Completable {
+        fetchImage()
+        return currencyRemote.fetchCurrency()
+            .flatMap { currencyResponseRoot ->
+                currencyLocal.insertOrUpdateAllCurrency(
+                    CurrencyRemoteToLocalConverter(
+                        currencyResponseRoot
+                    ).convertAll()
+                ).toObservable<Any>()
+            }
+            .ignoreElements()
+    }
+
+    private fun fetchImage() {
+        currencyRemote.fetchImages("https://drive.google.com/uc?id=1-swLg3qum_73lJ1-G3ysQDsTx46OItNw").subscribeOn(
+            Schedulers.io()).subscribeOn(Schedulers.io()).subscribe{
+            unpackZip(it.byteStream(), context).subscribeOn(Schedulers.io()).subscribe{ imageEntity ->
+                imageLocal.insertOrUpdateAllImage(imageEntity).subscribeOn(Schedulers.io()).subscribe({}, {})
+            }
+        }
+    }
+
     @Suppress("DEPRECATION")
     override fun isInternetAvailable(): Boolean {
         var result = false

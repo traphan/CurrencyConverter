@@ -2,6 +2,9 @@ package com.traphan.currencyconverter
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import com.traphan.currencyconverter.di.component.DaggerAppComponent
 import com.traphan.currencyconverter.di.module.ApiModule
 import com.traphan.currencyconverter.di.module.DbModule
@@ -27,7 +30,6 @@ class AppApplication : Application(), HasActivityInjector, HasServiceInjector {
     override fun activityInjector(): DispatchingAndroidInjector<Activity>? {
         return dispatchingAndroidInjector
     }
-
 
     override fun onCreate() {
         super.onCreate()

@@ -1,7 +1,11 @@
 package com.traphan.currencyconverter.ui.activity
 
 import android.Manifest
+import android.app.Application
 import android.app.Service
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.traphan.currencyconverter.ApiJobScheduler
 import com.traphan.currencyconverter.ui.base.BaseActivity
 import com.traphan.currencyconverter.ui.base.BaseFragment
 import com.traphan.currencyconverter.ui.viewmodel.CurrencyViewModel
@@ -59,6 +64,10 @@ class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector, O
         return serviceInjector
     }
 
+    private lateinit var jobScheduler: JobScheduler
+    internal lateinit var componentName: ComponentName
+    private lateinit var jobInfo: JobInfo
+
     private val REQUEST_EXTERNAL_STORAGE = 666
     private var permissionLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -99,6 +108,10 @@ class Splash : BaseActivity(), HasSupportFragmentInjector, HasServiceInjector, O
         super.onStart()
         permissionLiveData.observe(this, Observer {
             if (it) {
+                componentName = ComponentName(this, ApiJobScheduler::class.java)
+                jobInfo = JobInfo.Builder(1, componentName).setOverrideDeadline(0).build()
+                jobScheduler = this.getSystemService(Application.JOB_SCHEDULER_SERVICE) as JobScheduler
+                jobScheduler.schedule(jobInfo)
                 viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
                 viewModel.isInsertUserCurrency().observe(this, this)
             }

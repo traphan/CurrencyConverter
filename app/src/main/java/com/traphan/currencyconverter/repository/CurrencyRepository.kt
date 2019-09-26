@@ -19,4 +19,6 @@ interface CurrencyRepository {
     fun loadAllCurrencyJoin(ids: List<String>): Single<List<CurrencyJoinImage>>
 
     fun isInternetAvailable(): Boolean
+
+    fun fetchCurrency(): Completable
 }
